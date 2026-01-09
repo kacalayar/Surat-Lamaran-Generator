@@ -282,8 +282,13 @@ Pendukung Sertifikat lainnya</textarea>
             let isDrawing = false;
             let lastX = 0;
             let lastY = 0;
+            let signatureData = null;
 
             function resizeCanvas() {
+                // Simpan data sebelum resize
+                if (signaturePad.width > 0 && signaturePad.height > 0) {
+                    signatureData = signaturePad.toDataURL();
+                }
                 const rect = signaturePad.getBoundingClientRect();
                 signaturePad.width = rect.width;
                 signaturePad.height = rect.height;
@@ -291,9 +296,19 @@ Pendukung Sertifikat lainnya</textarea>
                 ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
+                // Restore data setelah resize
+                if (signatureData) {
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, signaturePad.width, signaturePad.height);
+                    };
+                    img.src = signatureData;
+                }
             }
             resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('resize', () => {
+                setTimeout(resizeCanvas, 100);
+            });
 
             function getPosition(e) {
                 const rect = signaturePad.getBoundingClientRect();
@@ -331,6 +346,10 @@ Pendukung Sertifikat lainnya</textarea>
 
             function stopDrawing() {
                 isDrawing = false;
+                // Simpan signature data saat selesai menggambar
+                if (signaturePad.width > 0 && signaturePad.height > 0) {
+                    signatureData = signaturePad.toDataURL();
+                }
             }
 
             function updateSignaturePreview() {
@@ -343,15 +362,16 @@ Pendukung Sertifikat lainnya</textarea>
                 ctx.clearRect(0, 0, signaturePad.width, signaturePad.height);
                 signatureImage.src = '';
                 signatureImage.style.display = 'none';
+                signatureData = null;
             }
 
             signaturePad.addEventListener('mousedown', startDrawing);
             signaturePad.addEventListener('mousemove', draw);
             signaturePad.addEventListener('mouseup', stopDrawing);
             signaturePad.addEventListener('mouseout', stopDrawing);
-            signaturePad.addEventListener('touchstart', startDrawing);
-            signaturePad.addEventListener('touchmove', draw);
-            signaturePad.addEventListener('touchend', stopDrawing);
+            signaturePad.addEventListener('touchstart', startDrawing, { passive: false });
+            signaturePad.addEventListener('touchmove', draw, { passive: false });
+            signaturePad.addEventListener('touchend', stopDrawing, { passive: false });
             clearSignatureBtn.addEventListener('click', clearSignature);
 
             // --- Ambil Elemen Output (Pratinjau) ---
@@ -508,7 +528,15 @@ Pendukung Sertifikat lainnya</textarea>
                     margin:       [0.5, 0.75, 0.5, 0.75], // PERBAIKAN: margin: [top, right, bottom, left] (dalam inci)
                     filename:     filename,
                     image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, logging: false }, // scale 2 untuk kualitas lebih baik
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true, 
+                        logging: false,
+                        scrollX: 0,
+                        scrollY: -window.scrollY,
+                        windowWidth: letterPreview.scrollWidth,
+                        windowHeight: letterPreview.scrollHeight
+                    },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
 
