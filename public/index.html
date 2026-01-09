@@ -133,6 +133,16 @@ NPWP
 Pas Foto
 Pendukung Sertifikat lainnya</textarea>
                     </div>
+                    <!-- Tanda Tangan -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanda Tangan</label>
+                        <div class="border border-gray-300 rounded-md bg-white">
+                            <canvas id="signature-pad" class="w-full rounded-md" style="height: 150px; touch-action: none;"></canvas>
+                        </div>
+                        <button type="button" id="clear-signature" class="mt-2 px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150">
+                            Hapus Tanda Tangan
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -229,7 +239,10 @@ Pendukung Sertifikat lainnya</textarea>
                         <!-- Tanda Tangan -->
                         <div class="text-right">
                             <!-- PERBAIKAN: Mengurangi margin bawah untuk hemat ruang -->
-                            <p class="mb-10">Hormat saya,</p> <!-- Diubah dari mb-12 -->
+                            <p class="mb-2">Hormat saya,</p>
+                            <div id="output-signature" class="mb-2 flex justify-end">
+                                <img id="signature-image" src="" alt="" class="max-h-16" style="display: none;">
+                            </div>
                             <p id="output-nama-bawah" class="font-bold">[Nama Lengkap]</p>
                         </div>
                     </div> <!-- Tutup div pembungkus -->
@@ -260,6 +273,86 @@ Pendukung Sertifikat lainnya</textarea>
             const copyMessage = document.getElementById('copy-message');
             const pdfButton = document.getElementById('pdf-button'); // Ambil tombol PDF
             const pdfErrorMessage = document.getElementById('pdf-error-message'); // Ambil pesan error PDF
+
+            // --- Signature Pad ---
+            const signaturePad = document.getElementById('signature-pad');
+            const clearSignatureBtn = document.getElementById('clear-signature');
+            const signatureImage = document.getElementById('signature-image');
+            const ctx = signaturePad.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            function resizeCanvas() {
+                const rect = signaturePad.getBoundingClientRect();
+                signaturePad.width = rect.width;
+                signaturePad.height = rect.height;
+                ctx.strokeStyle = '#1f2937';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            function getPosition(e) {
+                const rect = signaturePad.getBoundingClientRect();
+                if (e.touches) {
+                    return {
+                        x: e.touches[0].clientX - rect.left,
+                        y: e.touches[0].clientY - rect.top
+                    };
+                }
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                isDrawing = true;
+                const pos = getPosition(e);
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPosition(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                lastX = pos.x;
+                lastY = pos.y;
+                updateSignaturePreview();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            function updateSignaturePreview() {
+                const dataURL = signaturePad.toDataURL();
+                signatureImage.src = dataURL;
+                signatureImage.style.display = 'block';
+            }
+
+            function clearSignature() {
+                ctx.clearRect(0, 0, signaturePad.width, signaturePad.height);
+                signatureImage.src = '';
+                signatureImage.style.display = 'none';
+            }
+
+            signaturePad.addEventListener('mousedown', startDrawing);
+            signaturePad.addEventListener('mousemove', draw);
+            signaturePad.addEventListener('mouseup', stopDrawing);
+            signaturePad.addEventListener('mouseout', stopDrawing);
+            signaturePad.addEventListener('touchstart', startDrawing);
+            signaturePad.addEventListener('touchmove', draw);
+            signaturePad.addEventListener('touchend', stopDrawing);
+            clearSignatureBtn.addEventListener('click', clearSignature);
 
             // --- Ambil Elemen Output (Pratinjau) ---
             const outputLokasiTanggal = document.getElementById('output-lokasi-tanggal');
