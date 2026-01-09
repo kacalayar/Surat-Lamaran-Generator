@@ -6,8 +6,9 @@
     <title>Generator Surat Lamaran Kerja</title>
     <!-- Muat Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Muat html2pdf.js untuk fitur PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" xintegrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Muat html2canvas dan jsPDF terpisah untuk kompatibilitas mobile -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Muat font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -517,66 +518,86 @@ Pendukung Sertifikat lainnya</textarea>
                 pdfButton.innerText = 'Memproses...';
 
                 try {
-                    // Buat clone element untuk PDF (solusi mobile)
-                    const clone = letterPreview.cloneNode(true);
-                    clone.id = 'pdf-clone';
-                    clone.style.cssText = `
+                    // Buat wrapper div untuk capture
+                    const wrapper = document.createElement('div');
+                    wrapper.style.cssText = `
                         position: absolute;
-                        left: 0;
+                        left: -9999px;
                         top: 0;
-                        width: 700px;
-                        min-height: auto;
+                        width: 794px;
                         background: white;
-                        padding: 48px;
+                        padding: 40px;
                         font-family: Georgia, serif;
                         font-size: 15px;
                         line-height: 1.5;
                         color: #111827;
-                        z-index: -9999;
-                        visibility: visible;
                     `;
                     
-                    // Buat container tersembunyi
-                    const container = document.createElement('div');
-                    container.id = 'pdf-container';
-                    container.style.cssText = `
-                        position: fixed;
-                        left: 0;
-                        top: 0;
-                        width: 700px;
-                        height: auto;
-                        overflow: visible;
-                        z-index: -9999;
+                    // Clone content
+                    const clone = letterPreview.cloneNode(true);
+                    clone.style.cssText = `
+                        width: 100%;
+                        min-height: auto;
                         background: white;
+                        padding: 0;
+                        box-shadow: none;
+                        border-radius: 0;
                     `;
-                    container.appendChild(clone);
-                    document.body.appendChild(container);
+                    clone.classList.remove('min-h-[70vh]', 'shadow-lg', 'rounded-lg');
+                    
+                    wrapper.appendChild(clone);
+                    document.body.appendChild(wrapper);
                     
                     // Tunggu render
-                    await new Promise(resolve => setTimeout(resolve, 500));
-
-                    // Opsi untuk html2pdf
-                    const options = {
-                        margin:       [0.5, 0.75, 0.5, 0.75],
-                        filename:     filename,
-                        image:        { type: 'png', quality: 1 },
-                        html2canvas:  { 
-                            scale: 2,
-                            useCORS: true, 
-                            logging: false,
-                            allowTaint: true,
-                            backgroundColor: '#ffffff',
-                            width: 700,
-                            windowWidth: 700
-                        },
-                        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                    };
-
-                    // Generate PDF dari clone
-                    await html2pdf().from(clone).set(options).save();
+                    await new Promise(r => setTimeout(r, 300));
                     
-                    // Hapus container
-                    document.body.removeChild(container);
+                    // Capture dengan html2canvas
+                    const canvas = await html2canvas(wrapper, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        width: 794,
+                        windowWidth: 794
+                    });
+                    
+                    // Hapus wrapper
+                    document.body.removeChild(wrapper);
+                    
+                    // Buat PDF dengan jsPDF
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
+                    // Hitung dimensi
+                    const imgWidth = 210; // A4 width in mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    const pageHeight = 297; // A4 height in mm
+                    
+                    // Tambah gambar ke PDF
+                    const imgData = canvas.toDataURL('image/png', 1.0);
+                    
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Halaman pertama
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    
+                    // Tambah halaman jika perlu
+                    while (heightLeft > 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+                    
+                    // Simpan PDF
+                    pdf.save(filename);
                     
                 } catch (err) {
                     console.error("Gagal membuat PDF:", err);
@@ -585,11 +606,9 @@ Pendukung Sertifikat lainnya</textarea>
                         pdfErrorMessage.style.display = 'none';
                     }, 3000);
                     
-                    // Hapus container jika ada error
-                    const container = document.getElementById('pdf-container');
-                    if (container) {
-                        document.body.removeChild(container);
-                    }
+                    // Cleanup jika error
+                    const wrapper = document.querySelector('div[style*="left: -9999px"]');
+                    if (wrapper) document.body.removeChild(wrapper);
                 } finally {
                     pdfButton.disabled = false;
                     pdfButton.innerText = 'Simpan sebagai PDF';
