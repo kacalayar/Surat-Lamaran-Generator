@@ -504,7 +504,7 @@ Pendukung Sertifikat lainnya</textarea>
             });
 
             // --- Fungsi Tombol PDF ---
-            pdfButton.addEventListener('click', () => {
+            pdfButton.addEventListener('click', async () => {
                 const letterPreview = document.getElementById('letter-preview');
                 const nama = namaInput.value || "Pelamar"; // Ambil nama dari input
                 const filename = `Surat Lamaran - ${nama}.pdf`;
@@ -512,37 +512,58 @@ Pendukung Sertifikat lainnya</textarea>
                 // Sembunyikan pesan error sebelumnya
                 pdfErrorMessage.style.display = 'none';
 
+                // Nonaktifkan tombol selama proses
+                pdfButton.disabled = true;
+                pdfButton.innerText = 'Memproses...';
+
+                // Scroll ke atas halaman dan tunggu sebentar
+                window.scrollTo(0, 0);
+                letterPreview.scrollIntoView({ behavior: 'instant', block: 'start' });
+                await new Promise(resolve => setTimeout(resolve, 300));
+
                 // --- PERBAIKAN: Hapus min-height sementara ---
                 // Simpan style asli (jika ada) dan class
                 const originalMinHeight = letterPreview.style.minHeight;
                 const originalClasses = letterPreview.className;
+                const originalWidth = letterPreview.style.width;
+                const originalPosition = letterPreview.style.position;
+                const originalLeft = letterPreview.style.left;
+                const originalTop = letterPreview.style.top;
                 
                 // Hapus min-height agar tinggi elemen pas dengan kontennya
                 letterPreview.style.minHeight = 'auto';
                 // Hapus class min-h-[70vh] dari Tailwind
                 letterPreview.classList.remove('min-h-[70vh]');
+                // Set width tetap untuk konsistensi di mobile
+                letterPreview.style.width = '700px';
+                
+                // Force reflow
+                letterPreview.offsetHeight;
 
+                await new Promise(resolve => setTimeout(resolve, 100));
 
                 // Opsi untuk html2pdf
                 const options = {
                     margin:       [0.5, 0.75, 0.5, 0.75], // PERBAIKAN: margin: [top, right, bottom, left] (dalam inci)
                     filename:     filename,
-                    image:        { type: 'jpeg', quality: 0.98 },
+                    image:        { type: 'png', quality: 1 },
                     html2canvas:  { 
-                        scale: 2, 
+                        scale: 2,
                         useCORS: true, 
                         logging: false,
-                        scrollX: 0,
-                        scrollY: -window.scrollY,
-                        windowWidth: letterPreview.scrollWidth,
-                        windowHeight: letterPreview.scrollHeight
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        onclone: function(clonedDoc) {
+                            const clonedPreview = clonedDoc.getElementById('letter-preview');
+                            if (clonedPreview) {
+                                clonedPreview.style.width = '700px';
+                                clonedPreview.style.minHeight = 'auto';
+                                clonedPreview.style.position = 'relative';
+                            }
+                        }
                     },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
-
-                // Nonaktifkan tombol selama proses
-                pdfButton.disabled = true;
-                pdfButton.innerText = 'Memproses...';
 
                 // Panggil html2pdf
                 html2pdf().from(letterPreview).set(options).save()
@@ -561,6 +582,10 @@ Pendukung Sertifikat lainnya</textarea>
                         // --- KEMBALIKAN STYLE & TOMBOL ---
                         // Apapun yang terjadi (sukses/gagal), kembalikan style asli
                         letterPreview.style.minHeight = originalMinHeight;
+                        letterPreview.style.width = originalWidth;
+                        letterPreview.style.position = originalPosition;
+                        letterPreview.style.left = originalLeft;
+                        letterPreview.style.top = originalTop;
                         // Kembalikan class asli (termasuk min-h-[70vh])
                         letterPreview.className = originalClasses;
                         
