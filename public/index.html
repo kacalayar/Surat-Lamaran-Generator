@@ -548,6 +548,26 @@ Pendukung Sertifikat lainnya</textarea>
                     `;
                     clone.classList.remove('min-h-[70vh]', 'shadow-lg', 'rounded-lg');
                     
+                    // Fix style untuk ordered list di PDF
+                    const olElement = clone.querySelector('#output-lampiran');
+                    if (olElement) {
+                        olElement.style.cssText = `
+                            list-style-type: decimal;
+                            list-style-position: outside;
+                            padding-left: 2em;
+                            margin-left: 1em;
+                            margin-bottom: 1.5em;
+                        `;
+                        // Style untuk setiap li
+                        const liElements = olElement.querySelectorAll('li');
+                        liElements.forEach(li => {
+                            li.style.cssText = `
+                                padding-left: 0.5em;
+                                margin-bottom: 0.25em;
+                            `;
+                        });
+                    }
+
                     wrapper.appendChild(clone);
                     document.body.appendChild(wrapper);
                     
