@@ -551,23 +551,39 @@ Pendukung Sertifikat lainnya</textarea>
                     // Fix style untuk ordered list di PDF
                     const olElement = clone.querySelector('#output-lampiran');
                     if (olElement) {
-                        olElement.style.cssText = `
-                            list-style-type: decimal;
-                            list-style-position: inside;
-                            padding-left: 1em;
-                            margin-left: 0;
+                        // Ganti ol dengan table untuk alignment yang tepat
+                        const liElements = olElement.querySelectorAll('li');
+                        const table = document.createElement('table');
+                        table.style.cssText = `
+                            border-collapse: collapse;
+                            margin-left: 1em;
                             margin-bottom: 1.5em;
                         `;
-                        // Style untuk setiap li
-                        const liElements = olElement.querySelectorAll('li');
-                        liElements.forEach(li => {
-                            li.style.cssText = `
-                                text-indent: 0;
-                                padding-left: 0;
-                                margin-bottom: 0.25em;
-                                line-height: 1.6;
+                        
+                        liElements.forEach((li, index) => {
+                            const tr = document.createElement('tr');
+                            const tdNum = document.createElement('td');
+                            const tdText = document.createElement('td');
+                            
+                            tdNum.style.cssText = `
+                                vertical-align: top;
+                                padding-right: 0.5em;
+                                text-align: right;
+                                white-space: nowrap;
                             `;
+                            tdNum.textContent = (index + 1) + '.';
+                            
+                            tdText.style.cssText = `
+                                vertical-align: top;
+                            `;
+                            tdText.textContent = li.textContent;
+                            
+                            tr.appendChild(tdNum);
+                            tr.appendChild(tdText);
+                            table.appendChild(tr);
                         });
+                        
+                        olElement.parentNode.replaceChild(table, olElement);
                     }
 
                     wrapper.appendChild(clone);
