@@ -34,10 +34,13 @@
         .personal-data-grid > span:nth-child(3n+2) {
             text-align: center;
         }
-        /* HAPUS ATURAN LAMA - SUDAH TIDAK DIPERLUKAN DAN KELIRU */
-        /* .signature-block {
-            page-break-inside: avoid;
-        } */
+        /* Style untuk daftar lampiran agar nomor dan teks sejajar */
+        #output-lampiran {
+            padding-left: 1.5em;
+        }
+        #output-lampiran li {
+            padding-left: 0.5em;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -222,7 +225,7 @@ Pendukung Sertifikat lainnya</textarea>
                     </p>
 
                     <!-- Lampiran -->
-                    <ol id="output-lampiran" class="list-decimal mb-6 ml-8">
+                    <ol id="output-lampiran" class="list-decimal mb-6 ml-4">
                         <li>[Lampiran 1]</li>
                         <li>[Lampiran 2]</li>
                     </ol>
