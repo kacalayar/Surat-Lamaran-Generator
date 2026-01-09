@@ -1,377 +1,596 @@
- <!DOCTYPE html>
- <html lang="id">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>CV Generator</title>
-     <link href="output.css" rel="stylesheet">
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-     <style>
-         body { font-family: 'Inter', sans-serif; }
-         #cv-preview {
-             font-family: 'Montserrat', sans-serif;
-             background: #f5f5f5;
-         }
-         #cv-preview .cv-name {
-             font-weight: 800;
-             letter-spacing: 0.15em;
-             text-transform: uppercase;
-         }
-         #cv-preview .cv-position {
-             letter-spacing: 0.2em;
-             text-transform: uppercase;
-             font-weight: 500;
-         }
-         #cv-preview .section-title {
-             font-weight: 700;
-             letter-spacing: 0.15em;
-             text-transform: uppercase;
-            border-bottom: 2px solid #374151;
-            padding-bottom: 0.35rem;
-             margin-bottom: 0.75rem;
-            display: inline-block;
-         }
-         .photo-placeholder {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-             background: #e5e7eb;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             overflow: hidden;
-            border: 3px solid #374151;
-         }
-         .photo-placeholder img {
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-         }
-     </style>
- </head>
- <body class="bg-gray-100 min-h-screen">
-     <!-- Header -->
-     <header class="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
-         <div class="container mx-auto max-w-7xl px-4 py-5">
-             <div class="flex items-center justify-between">
-                 <div class="flex items-center space-x-3">
-                     <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                     </svg>
-                     <h1 class="text-2xl md:text-3xl font-bold text-white">CV Generator</h1>
-                 </div>
-                 <nav class="flex space-x-4">
-                     <a href="index.html" class="text-slate-300 hover:text-white transition">Surat Lamaran</a>
-                    <a href="cv.html" class="text-white font-semibold border-b-2 border-blue-400">CV Template 1</a>
-                    <a href="cv2.html" class="text-slate-300 hover:text-white transition">CV Template 2</a>
-                 </nav>
-             </div>
-         </div>
-     </header>
- 
-     <main class="container mx-auto max-w-7xl p-4 md:p-8">
-         <div class="md:flex md:space-x-8">
-             <!-- Kolom Kiri: Form Input -->
-             <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-lg mb-8 md:mb-0 max-h-[85vh] overflow-y-auto">
-                 <h2 class="text-2xl font-semibold mb-6 text-gray-700">Data CV</h2>
-                 <form id="form-cv">
-                     <!-- Foto -->
-                     <div class="mb-4">
-                         <label class="block text-sm font-medium text-gray-700 mb-1">Foto</label>
-                         <input type="file" id="foto" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                     </div>
- 
-                     <!-- Data Utama -->
-                     <div class="mb-4">
-                         <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                         <input type="text" id="nama" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="LUKMAN ALI">
-                     </div>
-                     <div class="mb-4">
-                         <label for="posisi" class="block text-sm font-medium text-gray-700 mb-1">Posisi/Jabatan</label>
-                         <input type="text" id="posisi" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="OPERATOR EXCAVATOR">
-                     </div>
- 
-                     <!-- Profil -->
-                     <div class="mb-4">
-                         <label for="profil" class="block text-sm font-medium text-gray-700 mb-1">Profil</label>
-                         <textarea id="profil" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Deskripsi singkat tentang diri Anda..."></textarea>
-                     </div>
- 
-                     <!-- Kontak -->
-                     <div class="border-t pt-4 mt-4">
-                         <h3 class="font-semibold text-gray-700 mb-3">Kontak</h3>
-                         <div class="mb-3">
-                             <label for="telepon" class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
-                             <input type="tel" id="telepon" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="0822 4370 5021">
-                         </div>
-                         <div class="mb-3">
-                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                             <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="email@gmail.com">
-                         </div>
-                         <div class="mb-3">
-                             <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                             <textarea id="alamat" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Ds.Sukorejo rt.01/rw.01&#10;kec.Tambakrejo, Kab.Bojonegoro"></textarea>
-                         </div>
-                     </div>
- 
-                     <!-- Pendidikan -->
-                     <div class="border-t pt-4 mt-4">
-                         <h3 class="font-semibold text-gray-700 mb-3">Pendidikan</h3>
-                         <textarea id="pendidikan" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="SDN SUKOREJO 3 ( 1997 - 2003 )&#10;SMP N 1 TAMBAKREJO ( 2003 - 2006 )&#10;SMA N 1 TAMBAKREJO ( 2006 - 2009 )"></textarea>
-                     </div>
- 
-                     <!-- Pengalaman -->
-                     <div class="border-t pt-4 mt-4">
-                         <h3 class="font-semibold text-gray-700 mb-3">Pengalaman Kerja</h3>
-                         <div id="pengalaman-container">
-                             <div class="pengalaman-item mb-4 p-3 bg-gray-50 rounded-md">
-                                 <input type="text" class="exp-company w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Nama Perusahaan">
-                                 <input type="text" class="exp-position w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Posisi (Periode)">
-                                 <textarea class="exp-desc w-full px-3 py-2 border border-gray-300 rounded-md" rows="3" placeholder="Deskripsi pekerjaan (satu per baris)"></textarea>
-                             </div>
-                         </div>
-                         <button type="button" id="add-pengalaman" class="text-blue-600 text-sm hover:underline">+ Tambah Pengalaman</button>
-                     </div>
- 
-                     <!-- Keterampilan -->
-                     <div class="border-t pt-4 mt-4">
-                         <h3 class="font-semibold text-gray-700 mb-3">Keterampilan</h3>
-                         <textarea id="keterampilan" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Pengoperasian Excavator HITACHI zaxis 110 MF&#10;Pengoperasian Excavator CAT 320 GC&#10;Pengoperasian Compactor HAMM"></textarea>
-                     </div>
-                 </form>
-             </div>
- 
-             <!-- Kolom Kanan: Preview -->
-             <div class="md:w-2/3">
-                 <div class="flex justify-between items-center mb-4">
-                     <h2 class="text-2xl font-semibold text-gray-700">Preview CV</h2>
-                     <button id="pdf-button" class="px-5 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 transition duration-150">
-                         Simpan sebagai PDF
-                     </button>
-                 </div>
- 
-                 <!-- CV Preview -->
-               <div id="cv-preview" class="rounded-lg shadow-lg overflow-hidden" style="min-height: 800px; background: white;">
-                    <!-- Header CV - Background Abu-abu -->
-                    <div class="px-8 py-6 bg-white">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h1 id="out-nama" class="cv-name text-3xl text-gray-900 mb-2">LUKMAN ALI</h1>
-                                <p id="out-posisi" class="cv-position text-gray-700 text-sm tracking-widest">O P E R A T O R&nbsp;&nbsp;&nbsp;E X C A V A T O R</p>
-                            </div>
-                            <div class="photo-placeholder flex-shrink-0" id="photo-container">
-                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                            </div>
-                        </div>
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV Generator</title>
+    <link href="output.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      #cv-preview {
+        font-family: "Montserrat", sans-serif;
+        background: #f5f5f5;
+      }
+      #cv-preview .cv-name {
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+      #cv-preview .cv-position {
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+      #cv-preview .section-title {
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        border-bottom: 2px solid #374151;
+        padding-bottom: 0.35rem;
+        margin-bottom: 0.75rem;
+        display: inline-block;
+      }
+      .photo-placeholder {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 3px solid #374151;
+      }
+      .photo-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
+      <div class="container mx-auto max-w-7xl px-4 py-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <svg
+              class="w-8 h-8 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+            <h1 class="text-2xl md:text-3xl font-bold text-white">
+              CV Generator
+            </h1>
+          </div>
+          <nav class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-slate-300 hover:text-white transition"
+              >Surat Lamaran</a
+            >
+            <a
+              href="cv.html"
+              class="text-white font-semibold border-b-2 border-blue-400"
+              >CV Template 1</a
+            >
+            <a
+              href="cv2.html"
+              class="text-slate-300 hover:text-white transition"
+              >CV Template 2</a
+            >
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto max-w-7xl p-4 md:p-8">
+      <div class="md:flex md:space-x-8">
+        <!-- Kolom Kiri: Form Input -->
+        <div
+          class="md:w-1/3 bg-white p-6 rounded-lg shadow-lg mb-8 md:mb-0 max-h-[85vh] overflow-y-auto"
+        >
+          <h2 class="text-2xl font-semibold mb-6 text-gray-700">Data CV</h2>
+          <form id="form-cv">
+            <!-- Foto -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Foto</label
+              >
+              <input
+                type="file"
+                id="foto"
+                accept="image/*"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            <!-- Data Utama -->
+            <div class="mb-4">
+              <label
+                for="nama"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nama Lengkap</label
+              >
+              <input
+                type="text"
+                id="nama"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="LUKMAN ALI"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="posisi"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Posisi/Jabatan</label
+              >
+              <input
+                type="text"
+                id="posisi"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="OPERATOR EXCAVATOR"
+              />
+            </div>
+
+            <!-- Profil -->
+            <div class="mb-4">
+              <label
+                for="profil"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Profil</label
+              >
+              <textarea
+                id="profil"
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="Deskripsi singkat tentang diri Anda..."
+              ></textarea>
+            </div>
+
+            <!-- Kontak -->
+            <div class="border-t pt-4 mt-4">
+              <h3 class="font-semibold text-gray-700 mb-3">Kontak</h3>
+              <div class="mb-3">
+                <label
+                  for="telepon"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Telepon</label
+                >
+                <input
+                  type="tel"
+                  id="telepon"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="0822 4370 5021"
+                />
+              </div>
+              <div class="mb-3">
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="email@gmail.com"
+                />
+              </div>
+              <div class="mb-3">
+                <label
+                  for="alamat"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Alamat</label
+                >
+                <textarea
+                  id="alamat"
+                  rows="2"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="Ds.Sukorejo rt.01/rw.01&#10;kec.Tambakrejo, Kab.Bojonegoro"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Pendidikan -->
+            <div class="border-t pt-4 mt-4">
+              <h3 class="font-semibold text-gray-700 mb-3">Pendidikan</h3>
+              <textarea
+                id="pendidikan"
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="SDN SUKOREJO 3 ( 1997 - 2003 )&#10;SMP N 1 TAMBAKREJO ( 2003 - 2006 )&#10;SMA N 1 TAMBAKREJO ( 2006 - 2009 )"
+              ></textarea>
+            </div>
+
+            <!-- Pengalaman -->
+            <div class="border-t pt-4 mt-4">
+              <h3 class="font-semibold text-gray-700 mb-3">Pengalaman Kerja</h3>
+              <div id="pengalaman-container">
+                <div class="pengalaman-item mb-4 p-3 bg-gray-50 rounded-md">
+                  <input
+                    type="text"
+                    class="exp-company w-full px-3 py-2 border border-gray-300 rounded-md mb-2"
+                    placeholder="Nama Perusahaan"
+                  />
+                  <input
+                    type="text"
+                    class="exp-position w-full px-3 py-2 border border-gray-300 rounded-md mb-2"
+                    placeholder="Posisi (Periode)"
+                  />
+                  <textarea
+                    class="exp-desc w-full px-3 py-2 border border-gray-300 rounded-md"
+                    rows="3"
+                    placeholder="Deskripsi pekerjaan (satu per baris)"
+                  ></textarea>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="add-pengalaman"
+                class="text-blue-600 text-sm hover:underline"
+              >
+                + Tambah Pengalaman
+              </button>
+            </div>
+
+            <!-- Keterampilan -->
+            <div class="border-t pt-4 mt-4">
+              <h3 class="font-semibold text-gray-700 mb-3">Keterampilan</h3>
+              <textarea
+                id="keterampilan"
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="Pengoperasian Excavator HITACHI zaxis 110 MF&#10;Pengoperasian Excavator CAT 320 GC&#10;Pengoperasian Compactor HAMM"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+
+        <!-- Kolom Kanan: Preview -->
+        <div class="md:w-2/3">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-700">Preview CV</h2>
+            <button
+              id="pdf-button"
+              class="px-5 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 transition duration-150"
+            >
+              Simpan sebagai PDF
+            </button>
+          </div>
+
+          <!-- CV Preview -->
+          <div
+            id="cv-preview"
+            class="rounded-lg shadow-lg overflow-hidden"
+            style="min-height: 800px; background: white"
+          >
+            <!-- Header CV - Background Abu-abu -->
+            <div class="px-8 py-6 bg-white">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h1 id="out-nama" class="cv-name text-3xl text-gray-900 mb-2">
+                    LUKMAN ALI
+                  </h1>
+                  <p
+                    id="out-posisi"
+                    class="cv-position text-gray-700 text-sm tracking-widest"
+                  >
+                    O P E R A T O R&nbsp;&nbsp;&nbsp;E X C A V A T O R
+                  </p>
+                </div>
+                <div
+                  class="photo-placeholder flex-shrink-0"
+                  id="photo-container"
+                >
+                  <svg
+                    class="w-12 h-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Garis Pemisah Hitam -->
+            <div class="border-t-2 border-gray-800"></div>
+
+            <!-- Profil Section - Full Width dengan Background -->
+            <div class="px-8 py-5 bg-white">
+              <h2 class="section-title text-sm text-gray-900">PROFIL</h2>
+              <p
+                id="out-profil"
+                class="text-xs text-gray-700 text-justify leading-relaxed mt-2"
+              >
+                [Deskripsi profil akan muncul di sini]
+              </p>
+            </div>
+
+            <!-- Garis Pemisah di bawah Profil -->
+            <div class="border-t border-gray-400 mx-8"></div>
+
+            <!-- Content Area - 2 Kolom -->
+            <div class="px-8 py-6 bg-white">
+              <!-- 2 Column Layout -->
+              <div class="flex">
+                <!-- Kolom Kiri -->
+                <div class="w-2/5 pr-6 border-r border-gray-400">
+                  <!-- Kontak -->
+                  <div class="mb-6">
+                    <h2 class="section-title text-sm text-gray-900">KONTAK</h2>
+                    <div class="space-y-3 text-xs">
+                      <div class="flex items-start">
+                        <svg
+                          class="w-4 h-4 mr-3 mt-0.5 text-gray-800"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                          />
+                        </svg>
+                        <span id="out-telepon">0822 4370 5021</span>
+                      </div>
+                      <div class="flex items-start">
+                        <svg
+                          class="w-4 h-4 mr-3 mt-0.5 text-gray-800"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                          />
+                        </svg>
+                        <span id="out-email">email@gmail.com</span>
+                      </div>
+                      <div class="flex items-start">
+                        <svg
+                          class="w-4 h-4 mr-3 mt-0.5 text-gray-800"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg>
+                        <span id="out-alamat" class="whitespace-pre-line"
+                          >Ds.Sukorejo rt.01 / rw.01 kec.Tambakrejo,
+                          Kab.Bojonegoro</span
+                        >
+                      </div>
                     </div>
+                  </div>
 
-                    <!-- Garis Pemisah Hitam -->
-                    <div class="border-t-2 border-gray-800"></div>
+                  <!-- Pendidikan -->
+                  <div class="mb-6">
+                    <h2 class="section-title text-sm text-gray-900">
+                      PENDIDIKAN
+                    </h2>
+                    <ul
+                      id="out-pendidikan"
+                      class="text-xs space-y-1 list-disc list-outside ml-4"
+                    >
+                      <li>SDN SUKOREJO 3 ( 1997 - 2003 )</li>
+                      <li>SMP N 1 TAMBAKREJO ( 2003 - 2006 )</li>
+                      <li>SMA N 1 TAMBAKREJO ( 2006 - 2009 )</li>
+                    </ul>
+                  </div>
+                </div>
 
-                    <!-- Profil Section - Full Width dengan Background -->
-                    <div class="px-8 py-5 bg-white">
-                        <h2 class="section-title text-sm text-gray-900">PROFIL</h2>
-                        <p id="out-profil" class="text-xs text-gray-700 text-justify leading-relaxed mt-2">[Deskripsi profil akan muncul di sini]</p>
+                <!-- Kolom Kanan -->
+                <div class="w-3/5 pl-6">
+                  <!-- Pengalaman -->
+                  <div class="mb-6">
+                    <h2 class="section-title text-sm text-gray-900">
+                      PENGALAMAN
+                    </h2>
+                    <div id="out-pengalaman" class="space-y-4">
+                      <div class="exp-item">
+                        <p class="font-bold text-xs">PT.PUNGGAWA UTAMA</p>
+                        <p class="text-xs font-semibold">
+                          Operator Excavator & Operator Compactor
+                        </p>
+                        <p class="text-xs text-gray-600">
+                          ( Januari 2023 - Februari 2025 )
+                        </p>
+                        <ul
+                          class="text-xs list-disc list-outside ml-4 mt-1 text-justify"
+                        >
+                          <li>
+                            Mengoperasikan Excavator di quarry meliputi kegiatan
+                            loading batu, breaker batu dan OB tanah.
+                          </li>
+                          <li>
+                            Mengoperasikan Compactor untuk pemadatan jalan DT ke
+                            lokasi quarry.
+                          </li>
+                        </ul>
+                      </div>
                     </div>
+                  </div>
 
-                    <!-- Garis Pemisah di bawah Profil -->
-                    <div class="border-t border-gray-400 mx-8"></div>
- 
-                    <!-- Content Area - 2 Kolom -->
-                    <div class="px-8 py-6 bg-white">
-                        <!-- 2 Column Layout -->
-                        <div class="flex">
-                            <!-- Kolom Kiri -->
-                            <div class="w-2/5 pr-6 border-r border-gray-400">
-                                <!-- Kontak -->
-                                <div class="mb-6">
-                                    <h2 class="section-title text-sm text-gray-900">KONTAK</h2>
-                                    <div class="space-y-3 text-xs">
-                                        <div class="flex items-start">
-                                            <svg class="w-4 h-4 mr-3 mt-0.5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                                            </svg>
-                                            <span id="out-telepon">0822 4370 5021</span>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <svg class="w-4 h-4 mr-3 mt-0.5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                            </svg>
-                                            <span id="out-email">email@gmail.com</span>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <svg class="w-4 h-4 mr-3 mt-0.5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                                            </svg>
-                                            <span id="out-alamat" class="whitespace-pre-line">Ds.Sukorejo rt.01 / rw.01
-kec.Tambakrejo, Kab.Bojonegoro</span>
-                                        </div>
-                                     </div>
-                                 </div>
+                  <!-- Keterampilan -->
+                  <div>
+                    <h2 class="section-title text-sm text-gray-900">
+                      KETRAMPILAN
+                    </h2>
+                    <ul
+                      id="out-keterampilan"
+                      class="text-xs space-y-1 list-disc list-outside ml-4"
+                    >
+                      <li>Pengoperasian Excavator HITACHI zaxis 110 MF</li>
+                      <li>Pengoperasian Excavator CAT 320 GC</li>
+                      <li>Pengoperasian Excavator XCMG XE215G</li>
+                      <li>Pengoperasian Compactor HAMM</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-                                <!-- Pendidikan -->
-                                <div class="mb-6">
-                                    <h2 class="section-title text-sm text-gray-900">PENDIDIKAN</h2>
-                                    <ul id="out-pendidikan" class="text-xs space-y-1 list-disc list-outside ml-4">
-                                        <li>SDN SUKOREJO 3 ( 1997 - 2003 )</li>
-                                        <li>SMP N 1 TAMBAKREJO ( 2003 - 2006 )</li>
-                                        <li>SMA N 1 TAMBAKREJO ( 2006 - 2009 )</li>
-                                    </ul>
-                                </div>
-                             </div>
- 
-                            <!-- Kolom Kanan -->
-                            <div class="w-3/5 pl-6">
-                                <!-- Pengalaman -->
-                                <div class="mb-6">
-                                    <h2 class="section-title text-sm text-gray-900">PENGALAMAN</h2>
-                                    <div id="out-pengalaman" class="space-y-4">
-                                        <div class="exp-item">
-                                            <p class="font-bold text-xs">PT.PUNGGAWA UTAMA</p>
-                                            <p class="text-xs font-semibold">Operator Excavator & Operator Compactor</p>
-                                            <p class="text-xs text-gray-600">( Januari 2023 - Februari 2025 )</p>
-                                            <ul class="text-xs list-disc list-outside ml-4 mt-1 text-justify">
-                                                <li>Mengoperasikan Excavator di quarry meliputi kegiatan loading batu, breaker batu dan OB tanah.</li>
-                                                <li>Mengoperasikan Compactor untuk pemadatan jalan DT ke lokasi quarry.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Elements
+        const form = document.getElementById("form-cv");
+        const fotoInput = document.getElementById("foto");
+        const pdfButton = document.getElementById("pdf-button");
 
-                                <!-- Keterampilan -->
-                                <div>
-                                    <h2 class="section-title text-sm text-gray-900">KETRAMPILAN</h2>
-                                    <ul id="out-keterampilan" class="text-xs space-y-1 list-disc list-outside ml-4">
-                                        <li>Pengoperasian Excavator HITACHI zaxis 110 MF</li>
-                                        <li>Pengoperasian Excavator CAT 320 GC</li>
-                                        <li>Pengoperasian Excavator XCMG XE215G</li>
-                                        <li>Pengoperasian Compactor HAMM</li>
-                                    </ul>
-                                </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </main>
- 
-     <script>
-         document.addEventListener('DOMContentLoaded', () => {
-             // Elements
-             const form = document.getElementById('form-cv');
-             const fotoInput = document.getElementById('foto');
-             const pdfButton = document.getElementById('pdf-button');
- 
-             // Output elements
-             const outNama = document.getElementById('out-nama');
-             const outPosisi = document.getElementById('out-posisi');
-             const outProfil = document.getElementById('out-profil');
-             const outTelepon = document.getElementById('out-telepon');
-             const outEmail = document.getElementById('out-email');
-             const outAlamat = document.getElementById('out-alamat');
-             const outPendidikan = document.getElementById('out-pendidikan');
-             const outPengalaman = document.getElementById('out-pengalaman');
-             const outKeterampilan = document.getElementById('out-keterampilan');
-             const photoContainer = document.getElementById('photo-container');
- 
-             // Handle foto upload
-             fotoInput.addEventListener('change', (e) => {
-                 const file = e.target.files[0];
-                 if (file) {
-                     const reader = new FileReader();
-                     reader.onload = (e) => {
-                         photoContainer.innerHTML = `<img src="${e.target.result}" alt="Foto">`;
-                     };
-                     reader.readAsDataURL(file);
-                 }
-             });
- 
-             // Add pengalaman
-             document.getElementById('add-pengalaman').addEventListener('click', () => {
-                 const container = document.getElementById('pengalaman-container');
-                 const newItem = document.createElement('div');
-                 newItem.className = 'pengalaman-item mb-4 p-3 bg-gray-50 rounded-md';
-                 newItem.innerHTML = `
+        // Output elements
+        const outNama = document.getElementById("out-nama");
+        const outPosisi = document.getElementById("out-posisi");
+        const outProfil = document.getElementById("out-profil");
+        const outTelepon = document.getElementById("out-telepon");
+        const outEmail = document.getElementById("out-email");
+        const outAlamat = document.getElementById("out-alamat");
+        const outPendidikan = document.getElementById("out-pendidikan");
+        const outPengalaman = document.getElementById("out-pengalaman");
+        const outKeterampilan = document.getElementById("out-keterampilan");
+        const photoContainer = document.getElementById("photo-container");
+
+        // Handle foto upload
+        fotoInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              photoContainer.innerHTML = `<img src="${e.target.result}" alt="Foto">`;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Add pengalaman
+        document
+          .getElementById("add-pengalaman")
+          .addEventListener("click", () => {
+            const container = document.getElementById("pengalaman-container");
+            const newItem = document.createElement("div");
+            newItem.className =
+              "pengalaman-item mb-4 p-3 bg-gray-50 rounded-md";
+            newItem.innerHTML = `
                      <input type="text" class="exp-company w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Nama Perusahaan">
                      <input type="text" class="exp-position w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Posisi (Periode)">
                      <textarea class="exp-desc w-full px-3 py-2 border border-gray-300 rounded-md" rows="3" placeholder="Deskripsi pekerjaan (satu per baris)"></textarea>
                      <button type="button" class="remove-exp text-red-500 text-sm mt-1 hover:underline">Hapus</button>
                  `;
-                 container.appendChild(newItem);
-                 newItem.querySelector('.remove-exp').addEventListener('click', () => newItem.remove());
-                 updatePreview();
-             });
- 
-             // Update preview
-             function updatePreview() {
-                 outNama.textContent = document.getElementById('nama').value || 'NAMA LENGKAP';
-                 outPosisi.textContent = document.getElementById('posisi').value || 'POSISI / JABATAN';
-                 outProfil.textContent = document.getElementById('profil').value || '[Deskripsi profil akan muncul di sini]';
-                 outTelepon.textContent = document.getElementById('telepon').value || '[Telepon]';
-                 outEmail.textContent = document.getElementById('email').value || '[Email]';
-                 outAlamat.textContent = document.getElementById('alamat').value || '[Alamat]';
- 
-                 // Pendidikan
-                 const pendidikanText = document.getElementById('pendidikan').value;
-                 const pendidikanList = pendidikanText.split('\n').filter(line => line.trim());
-                 if (pendidikanList.length > 0) {
-                     outPendidikan.innerHTML = pendidikanList.map(p => `<li>${p.trim()}</li>`).join('');
-                 } else {
-                     outPendidikan.innerHTML = '<li>[Pendidikan]</li>';
-                 }
- 
-                 // Pengalaman
-                 const expItems = document.querySelectorAll('.pengalaman-item');
-                 let expHTML = '';
-                 expItems.forEach(item => {
-                     const company = item.querySelector('.exp-company').value || '[Nama Perusahaan]';
-                     const position = item.querySelector('.exp-position').value || '[Posisi (Periode)]';
-                     const desc = item.querySelector('.exp-desc').value;
-                     const descList = desc.split('\n').filter(line => line.trim());
-                     
-                     expHTML += `<div class="exp-item mb-3">
+            container.appendChild(newItem);
+            newItem
+              .querySelector(".remove-exp")
+              .addEventListener("click", () => newItem.remove());
+            updatePreview();
+          });
+
+        // Update preview
+        function updatePreview() {
+          outNama.textContent =
+            document.getElementById("nama").value || "NAMA LENGKAP";
+          outPosisi.textContent =
+            document.getElementById("posisi").value || "POSISI / JABATAN";
+          outProfil.textContent =
+            document.getElementById("profil").value ||
+            "[Deskripsi profil akan muncul di sini]";
+          outTelepon.textContent =
+            document.getElementById("telepon").value || "[Telepon]";
+          outEmail.textContent =
+            document.getElementById("email").value || "[Email]";
+          outAlamat.textContent =
+            document.getElementById("alamat").value || "[Alamat]";
+
+          // Pendidikan
+          const pendidikanText = document.getElementById("pendidikan").value;
+          const pendidikanList = pendidikanText
+            .split("\n")
+            .filter((line) => line.trim());
+          if (pendidikanList.length > 0) {
+            outPendidikan.innerHTML = pendidikanList
+              .map((p) => `<li>${p.trim()}</li>`)
+              .join("");
+          } else {
+            outPendidikan.innerHTML = "<li>[Pendidikan]</li>";
+          }
+
+          // Pengalaman
+          const expItems = document.querySelectorAll(".pengalaman-item");
+          let expHTML = "";
+          expItems.forEach((item) => {
+            const company =
+              item.querySelector(".exp-company").value || "[Nama Perusahaan]";
+            const position =
+              item.querySelector(".exp-position").value || "[Posisi (Periode)]";
+            const desc = item.querySelector(".exp-desc").value;
+            const descList = desc.split("\n").filter((line) => line.trim());
+
+            expHTML += `<div class="exp-item mb-3">
                          <p class="font-bold text-xs">${company}</p>
                          <p class="text-xs text-gray-600 font-semibold">${position}</p>
-                         ${descList.length > 0 ? `<ul class="text-xs list-disc list-inside mt-1">${descList.map(d => `<li>${d.trim()}</li>`).join('')}</ul>` : ''}
+                         ${descList.length > 0 ? `<ul class="text-xs list-disc list-inside mt-1">${descList.map((d) => `<li>${d.trim()}</li>`).join("")}</ul>` : ""}
                      </div>`;
-                 });
-                 outPengalaman.innerHTML = expHTML || '<div class="exp-item"><p class="text-xs">[Pengalaman kerja]</p></div>';
- 
-                 // Keterampilan
-                 const keterampilanText = document.getElementById('keterampilan').value;
-                 const keterampilanList = keterampilanText.split('\n').filter(line => line.trim());
-                 if (keterampilanList.length > 0) {
-                     outKeterampilan.innerHTML = keterampilanList.map(k => `<li>${k.trim()}</li>`).join('');
-                 } else {
-                     outKeterampilan.innerHTML = '<li>[Keterampilan]</li>';
-                 }
-             }
- 
-             // Listen for input changes
-             form.addEventListener('input', updatePreview);
- 
-             // PDF Generation
-             pdfButton.addEventListener('click', async () => {
-                 const cvPreview = document.getElementById('cv-preview');
-                 const nama = document.getElementById('nama').value || 'CV';
-                 const filename = `CV - ${nama}.pdf`;
- 
-                 pdfButton.disabled = true;
-                 pdfButton.textContent = 'Memproses...';
- 
-                 try {
-                    // A4 size in pixels at 96 DPI: 794 x 1123
-                    const a4Width = 794;
-                    
-                     const wrapper = document.createElement('div');
-                     wrapper.style.cssText = `
+          });
+          outPengalaman.innerHTML =
+            expHTML ||
+            '<div class="exp-item"><p class="text-xs">[Pengalaman kerja]</p></div>';
+
+          // Keterampilan
+          const keterampilanText =
+            document.getElementById("keterampilan").value;
+          const keterampilanList = keterampilanText
+            .split("\n")
+            .filter((line) => line.trim());
+          if (keterampilanList.length > 0) {
+            outKeterampilan.innerHTML = keterampilanList
+              .map((k) => `<li>${k.trim()}</li>`)
+              .join("");
+          } else {
+            outKeterampilan.innerHTML = "<li>[Keterampilan]</li>";
+          }
+        }
+
+        // Listen for input changes
+        form.addEventListener("input", updatePreview);
+
+        // PDF Generation
+        pdfButton.addEventListener("click", async () => {
+          const cvPreview = document.getElementById("cv-preview");
+          const nama = document.getElementById("nama").value || "CV";
+          const filename = `CV - ${nama}.pdf`;
+
+          pdfButton.disabled = true;
+          pdfButton.textContent = "Memproses...";
+
+          try {
+            // A4 size in pixels at 96 DPI: 794 x 1123
+            const a4Width = 794;
+
+            const wrapper = document.createElement("div");
+            wrapper.style.cssText = `
                          position: absolute;
                          left: -9999px;
                          top: 0;
@@ -379,77 +598,77 @@ kec.Tambakrejo, Kab.Bojonegoro</span>
                         background: white;
                          font-family: Montserrat, sans-serif;
                      `;
- 
-                     const clone = cvPreview.cloneNode(true);
-                     clone.style.cssText = `
+
+            const clone = cvPreview.cloneNode(true);
+            clone.style.cssText = `
                          width: 100%;
                          min-height: auto;
                         background: white;
                          box-shadow: none;
                          border-radius: 0;
                      `;
- 
-                     // Fix list alignment
-                     clone.querySelectorAll('ul').forEach(ul => {
-                         ul.style.cssText = 'list-style-type: disc; list-style-position: inside; padding-left: 0;';
-                     });
- 
-                     wrapper.appendChild(clone);
-                     document.body.appendChild(wrapper);
- 
-                     await new Promise(r => setTimeout(r, 500));
- 
-                     const canvas = await html2canvas(wrapper, {
-                         scale: 2,
-                         useCORS: true,
-                         allowTaint: true,
-                        backgroundColor: '#ffffff',
-                         logging: false,
-                        width: a4Width,
-                        windowWidth: a4Width
-                     });
- 
-                     document.body.removeChild(wrapper);
- 
-                     const { jsPDF } = window.jspdf;
-                     const pdf = new jsPDF({
-                         orientation: 'portrait',
-                         unit: 'mm',
-                         format: 'a4'
-                     });
- 
-                     const imgWidth = 210;
-                     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                     const pageHeight = 297;
-                     const imgData = canvas.toDataURL('image/png', 1.0);
- 
-                     let heightLeft = imgHeight;
-                     let position = 0;
- 
-                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                     heightLeft -= pageHeight;
- 
-                     while (heightLeft > 0) {
-                         position = heightLeft - imgHeight;
-                         pdf.addPage();
-                         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                         heightLeft -= pageHeight;
-                     }
- 
-                     pdf.save(filename);
- 
-                 } catch (err) {
-                     console.error('Gagal membuat PDF:', err);
-                     alert('Gagal membuat PDF. Silakan coba lagi.');
-                 } finally {
-                     pdfButton.disabled = false;
-                     pdfButton.textContent = 'Simpan sebagai PDF';
-                 }
-             });
- 
-             // Initial preview
-             updatePreview();
-         });
-     </script>
- </body>
- </html>
+
+            // Fix list alignment
+            clone.querySelectorAll("ul").forEach((ul) => {
+              ul.style.cssText =
+                "list-style-type: disc; list-style-position: inside; padding-left: 0;";
+            });
+
+            wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
+
+            await new Promise((r) => setTimeout(r, 500));
+
+            const canvas = await html2canvas(wrapper, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: "#ffffff",
+              logging: false,
+              width: a4Width,
+              windowWidth: a4Width,
+            });
+
+            document.body.removeChild(wrapper);
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4",
+            });
+
+            const imgWidth = 210;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const pageHeight = 297;
+            const imgData = canvas.toDataURL("image/png", 1.0);
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              pdf.addPage();
+              pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+
+            pdf.save(filename);
+          } catch (err) {
+            console.error("Gagal membuat PDF:", err);
+            alert("Gagal membuat PDF. Silakan coba lagi.");
+          } finally {
+            pdfButton.disabled = false;
+            pdfButton.textContent = "Simpan sebagai PDF";
+          }
+        });
+
+        // Initial preview
+        updatePreview();
+      });
+    </script>
+  </body>
+</html>

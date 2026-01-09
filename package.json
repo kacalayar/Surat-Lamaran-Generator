@@ -1,13 +1,14 @@
 {
    "name": "surat-lamaran-generator",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "Generator Surat Lamaran Kerja",
    "main": "api/index.js",
    "scripts": {
       "build:css": "tailwindcss -i ./src/input.css -o ./public/output.css --minify",
       "start": "node api/index.js",
       "dev": "node api/index.js",
-      "build": "npm run build:css"
+      "build": "npm run build:css",
+      "format": "prettier --write \"public/**/*.html\""
    },
    "dependencies": {
       "express": "^4.18.2"

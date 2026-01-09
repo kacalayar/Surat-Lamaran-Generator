@@ -1,533 +1,766 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Generator Surat Lamaran Kerja</title>
     <!-- Muat Tailwind CSS (production build) -->
-    <link href="output.css" rel="stylesheet">
+    <link href="output.css" rel="stylesheet" />
     <!-- Muat html2canvas dan jsPDF terpisah untuk kompatibilitas mobile -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Muat font Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Georgia:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Georgia:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        /* Terapkan font Inter sebagai default */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Gunakan font serif (Georgia) untuk pratinjau surat agar mirip dokumen asli */
-        #letter-preview {
-            font-family: 'Georgia', serif;
-            line-height: 1.5; /* PERBAIKAN: Diubah dari 1.6 */
-            font-size: 15px; /* PERBAIKAN: Ditambahkan untuk memadatkan */
-            color: #111827; /* gray-900 */
-        }
-        /* Atur grid untuk data diri agar rapi */
-        .personal-data-grid {
-            display: grid;
-            grid-template-columns: auto max-content 1fr;
-            gap: 0.25rem 0.75rem; /* gap-y-1 gap-x-3 */
-        }
-        .personal-data-grid > span:nth-child(3n+2) {
-            text-align: center;
-        }
-        /* Style untuk daftar lampiran agar nomor dan teks sejajar */
-        #output-lampiran {
-            padding-left: 1.5em;
-        }
-        #output-lampiran li {
-            padding-left: 0.5em;
-        }
+      /* Terapkan font Inter sebagai default */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Gunakan font serif (Georgia) untuk pratinjau surat agar mirip dokumen asli */
+      #letter-preview {
+        font-family: "Georgia", serif;
+        line-height: 1.5; /* PERBAIKAN: Diubah dari 1.6 */
+        font-size: 15px; /* PERBAIKAN: Ditambahkan untuk memadatkan */
+        color: #111827; /* gray-900 */
+      }
+      /* Atur grid untuk data diri agar rapi */
+      .personal-data-grid {
+        display: grid;
+        grid-template-columns: auto max-content 1fr;
+        gap: 0.25rem 0.75rem; /* gap-y-1 gap-x-3 */
+      }
+      .personal-data-grid > span:nth-child(3n + 2) {
+        text-align: center;
+      }
+      /* Style untuk daftar lampiran agar nomor dan teks sejajar */
+      #output-lampiran {
+        padding-left: 1.5em;
+      }
+      #output-lampiran li {
+        padding-left: 0.5em;
+      }
     </style>
-</head>
-<body class="bg-gray-100 min-h-screen">
-
+  </head>
+  <body class="bg-gray-100 min-h-screen">
     <!-- Header -->
     <header class="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
-        <div class="container mx-auto max-w-7xl px-4 py-5">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <h1 class="text-xl md:text-3xl font-bold text-white">Generator Surat Lamaran</h1>
-                </div>
-                <nav class="flex space-x-4">
-                    <a href="index.html" class="text-white font-semibold border-b-2 border-blue-400">Surat Lamaran</a>
-                    <a href="cv.html" class="text-slate-300 hover:text-white transition">CV Template 1</a>
-                    <a href="cv2.html" class="text-slate-300 hover:text-white transition">CV Template 2</a>
-                </nav>
-            </div>
+      <div class="container mx-auto max-w-7xl px-4 py-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <svg
+              class="w-8 h-8 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+            <h1 class="text-xl md:text-3xl font-bold text-white">
+              Generator Surat Lamaran
+            </h1>
+          </div>
+          <nav class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-white font-semibold border-b-2 border-blue-400"
+              >Surat Lamaran</a
+            >
+            <a href="cv.html" class="text-slate-300 hover:text-white transition"
+              >CV Template 1</a
+            >
+            <a
+              href="cv2.html"
+              class="text-slate-300 hover:text-white transition"
+              >CV Template 2</a
+            >
+          </nav>
         </div>
+      </div>
     </header>
 
     <main class="container mx-auto max-w-7xl p-4 md:p-8">
-        <div class="md:flex md:space-x-8">
-            <!-- Kolom Kiri: Form Input -->
-            <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-lg mb-8 md:mb-0">
-                <h2 class="text-2xl font-semibold mb-6 text-gray-700">Isi Data Diri</h2>
-                <form id="form-surat">
-                    <!-- Data untuk Header Surat -->
-                    <div class="flex space-x-4 mb-4">
-                        <div class="w-1/2">
-                            <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-1">Lokasi</label>
-                            <input type="text" id="lokasi" name="lokasi" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Jakarta">
-                        </div>
-                        <div class="w-1/2">
-                            <label for="tanggalSurat" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat</label>
-                            <input type="date" id="tanggalSurat" name="tanggalSurat" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                    </div>
+      <div class="md:flex md:space-x-8">
+        <!-- Kolom Kiri: Form Input -->
+        <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-lg mb-8 md:mb-0">
+          <h2 class="text-2xl font-semibold mb-6 text-gray-700">
+            Isi Data Diri
+          </h2>
+          <form id="form-surat">
+            <!-- Data untuk Header Surat -->
+            <div class="flex space-x-4 mb-4">
+              <div class="w-1/2">
+                <label
+                  for="lokasi"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Lokasi</label
+                >
+                <input
+                  type="text"
+                  id="lokasi"
+                  name="lokasi"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: Jakarta"
+                />
+              </div>
+              <div class="w-1/2">
+                <label
+                  for="tanggalSurat"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Tanggal Surat</label
+                >
+                <input
+                  type="date"
+                  id="tanggalSurat"
+                  name="tanggalSurat"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
 
-                    <!-- Data Diri -->
-                    <div class="mb-4">
-                        <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                        <input type="text" id="nama" name="nama" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Budi Santoso">
-                    </div>
-                    <div class="mb-4">
-                        <label for="jenisKelamin" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
-                        <select id="jenisKelamin" name="jenisKelamin" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option>Laki-laki</option>
-                            <option>Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="flex space-x-4 mb-4">
-                        <div class_A="w-1/2">
-                            <label for="tempatLahir" class="block text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
-                            <input type="text" id="tempatLahir" name="tempatLahir" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Bandung">
-                        </div>
-                        <div class_A="w-1/2">
-                            <label for="tanggalLahir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
-                            <input type="date" id="tanggalLahir" name="tanggalLahir" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label for="pendidikan" class="block text-sm font-medium text-gray-700 mb-1">Pendidikan Terakhir</label>
-                        <input type="text" id="pendidikan" name="pendidikan" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: S1 Teknik Informatika">
-                    </div>
-                    <div class="mb-4">
-                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                        <textarea id="alamat" name="alamat" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Jl. Merdeka No. 10, RT 01/RW 02, Kelurahan..."></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label for="handphone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Handphone</label>
-                        <input type="tel" id="handphone" name="handphone" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: 08123456789">
-                    </div>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
-                        <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: budi.santoso@email.com">
-                    </div>
+            <!-- Data Diri -->
+            <div class="mb-4">
+              <label
+                for="nama"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nama Lengkap</label
+              >
+              <input
+                type="text"
+                id="nama"
+                name="nama"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: Budi Santoso"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="jenisKelamin"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Jenis Kelamin</label
+              >
+              <select
+                id="jenisKelamin"
+                name="jenisKelamin"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option>Laki-laki</option>
+                <option>Perempuan</option>
+              </select>
+            </div>
+            <div class="flex space-x-4 mb-4">
+              <div class_A="w-1/2">
+                <label
+                  for="tempatLahir"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Tempat Lahir</label
+                >
+                <input
+                  type="text"
+                  id="tempatLahir"
+                  name="tempatLahir"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Contoh: Bandung"
+                />
+              </div>
+              <div class_A="w-1/2">
+                <label
+                  for="tanggalLahir"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Tanggal Lahir</label
+                >
+                <input
+                  type="date"
+                  id="tanggalLahir"
+                  name="tanggalLahir"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+            <div class="mb-4">
+              <label
+                for="pendidikan"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Pendidikan Terakhir</label
+              >
+              <input
+                type="text"
+                id="pendidikan"
+                name="pendidikan"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: S1 Teknik Informatika"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="alamat"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Alamat Lengkap</label
+              >
+              <textarea
+                id="alamat"
+                name="alamat"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: Jl. Merdeka No. 10, RT 01/RW 02, Kelurahan..."
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label
+                for="handphone"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nomor Handphone</label
+              >
+              <input
+                type="tel"
+                id="handphone"
+                name="handphone"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: 08123456789"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >E-mail</label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: budi.santoso@email.com"
+              />
+            </div>
 
-                    <!-- Data Lamaran -->
-                    <div class="mb-4">
-                        <label for="posisi" class="block text-sm font-medium text-gray-700 mb-1">Posisi yang Dilamar</label>
-                        <input type="text" id="posisi" name="posisi" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Operator Excavator">
-                    </div>
-                     <div class="mb-4">
-                        <label for="perusahaan" class="block text-sm font-medium text-gray-700 mb-1">Nama Perusahaan (Tujuan)</label>
-                        <input type="text" id="perusahaan" name="perusahaan" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: PT. Maju Jaya">
-                    </div>
-                    <div class="mb-4">
-                        <label for="lampiran" class="block text-sm font-medium text-gray-700 mb-1">Daftar Lampiran</label>
-                        <textarea id="lampiran" name="lampiran" rows="7" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Isi satu lampiran per baris. Contoh:&#10;CV&#10;Ijazah&#10;Transkrip Nilai&#10;KTP/SIM/SIO">CV
+            <!-- Data Lamaran -->
+            <div class="mb-4">
+              <label
+                for="posisi"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Posisi yang Dilamar</label
+              >
+              <input
+                type="text"
+                id="posisi"
+                name="posisi"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: Operator Excavator"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="perusahaan"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nama Perusahaan (Tujuan)</label
+              >
+              <input
+                type="text"
+                id="perusahaan"
+                name="perusahaan"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: PT. Maju Jaya"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="lampiran"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Daftar Lampiran</label
+              >
+              <textarea
+                id="lampiran"
+                name="lampiran"
+                rows="7"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Isi satu lampiran per baris. Contoh:&#10;CV&#10;Ijazah&#10;Transkrip Nilai&#10;KTP/SIM/SIO"
+              >
+CV
 Ijazah
 Transkrip Nilai
 KTP/SIM/SIO
 Kartu Keluarga
 NPWP
 Pas Foto
-Pendukung Sertifikat lainnya</textarea>
-                    </div>
-                    <!-- Tanda Tangan -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanda Tangan</label>
-                        <div class="border border-gray-300 rounded-md bg-white">
-                            <canvas id="signature-pad" class="w-full rounded-md" style="height: 150px; touch-action: none;"></canvas>
-                        </div>
-                        <button type="button" id="clear-signature" class="mt-2 px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150">
-                            Hapus Tanda Tangan
-                        </button>
-                    </div>
-                </form>
+Pendukung Sertifikat lainnya</textarea
+              >
             </div>
-
-            <!-- Kolom Kanan: Pratinjau Surat -->
-            <div class="md:w-2/3">
-                <div class="flex justify-between items-center mb-4">
-                     <h2 class="text-2xl font-semibold text-gray-700">Pratinjau Surat</h2>
-                     <!-- Wadah untuk tombol -->
-                     <div class="flex space-x-2">
-                         <button id="copy-button" class="px-5 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
-                             Salin Teks Surat
-                        </button>
-                        <button id="pdf-button" class="px-5 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-150">
-                             Simpan sebagai PDF
-                        </button>
-                    </div>
-                </div>
-                <div id="copy-message" class="text-green-600 font-medium mb-4 text-right" style="display: none;">
-                    Teks surat berhasil disalin!
-                </div>
-                <div id="pdf-error-message" class="text-red-600 font-medium mb-4 text-right" style="display: none;">
-                    Gagal membuat PDF. Silakan coba lagi.
-                </div>
-               
-                <div id="letter-preview" class="bg-white p-8 md:p-12 rounded-lg shadow-lg min-h-[70vh]">
-                    <!-- Header: Lokasi & Tanggal -->
-                    <div class="text-right mb-8">
-                        <span id="output-lokasi-tanggal">[Lokasi], [Tanggal Hari Ini]</span>
-                    </div>
-
-                    <!-- Tujuan Surat -->
-                    <div class="mb-6">
-                        <p>Yth. Bapak/Ibu</p>
-                        <p>Di tempat</p>
-                    </div>
-
-                    <!-- Paragraf Pembuka -->
-                    <p class="mb-6">Dengan hormat, Saya yang bertanda tangan di bawah ini:</p>
-
-                    <!-- Data Diri -->
-                    <div class="mb-6 ml-4 personal-data-grid">
-                        <span>Nama</span>
-                        <span>:</span>
-                        <span id="output-nama" class="font-medium">[Nama Lengkap]</span>
-                        
-                        <span>Jenis Kelamin</span>
-                        <span>:</span>
-                        <span id="output-jenisKelamin">[Jenis Kelamin]</span>
-                        
-                        <span>Tempat tanggal lahir</span>
-                        <span>:</span>
-                        <span id="output-tempatTanggalLahir">[Tempat Lahir], [Tanggal Lahir]</span>
-                        
-                        <span>Pendidikan</span>
-                        <span>:</span>
-                        <span id="output-pendidikan">[Pendidikan Terakhir]</span>
-                        
-                        <span>Alamat</span>
-                        <span>:</span>
-                        <span id="output-alamat">[Alamat Lengkap]</span>
-                        
-                        <span>Nomor Handphone</span>
-                        <span>:</span>
-                        <span id="output-handphone">[Nomor Handphone]</span>
-                        
-                        <span>E-mail</span>
-                        <span>:</span>
-                        <span id="output-email">[E-mail]</span>
-                    </div>
-
-                    <!-- Paragraf Isi (Tujuan) -->
-                    <p class="mb-6 text-justify">
-                        Bermaksud mengajukan lamaran pekerjaan pada posisi <strong id="output-posisi" class="font-bold">[Posisi yang Dilamar]</strong>
-                        yang dibutuhkan di <strong id="output-perusahaan" class="font-bold">[Nama Perusahaan]</strong>, sebagai bahan pertimbangan bersama surat
-                        lamaran ini saya telah melampirkan kelengkapan data diri sebagai berikut:
-                    </p>
-
-                    <!-- Lampiran -->
-                    <ol id="output-lampiran" class="list-decimal mb-6 ml-4">
-                        <li>[Lampiran 1]</li>
-                        <li>[Lampiran 2]</li>
-                    </ol>
-
-                    <!-- PERBAIKAN FINAL: Bungkus paragraf penutup DAN tanda tangan dalam satu blok
-                         dengan style 'page-break-inside: avoid;' untuk mencegah terpotong. -->
-                    <div style="page-break-inside: avoid;">
-                        <!-- Paragraf Penutup -->
-                        <!-- PERBAIKAN: Mengurangi margin bawah untuk hemat ruang -->
-                        <p class="mb-8 text-justify"> <!-- Diubah dari mb-12 -->
-                            Demikian surat permohonan lamaran pekerjaan ini saya buat dengan sebenar-benarnya.
-                            Atas perhatian dan waktunya saya ucapkan terima kasih.
-                        </p>
-
-                        <!-- Tanda Tangan -->
-                        <div class="text-right">
-                            <!-- PERBAIKAN: Mengurangi margin bawah untuk hemat ruang -->
-                            <p class="mb-2">Hormat saya,</p>
-                            <div id="output-signature" class="mb-2 flex justify-end">
-                                <img id="signature-image" src="" alt="" class="max-h-16" style="display: none;">
-                            </div>
-                            <p id="output-nama-bawah" class="font-bold">[Nama Lengkap]</p>
-                        </div>
-                    </div> <!-- Tutup div pembungkus -->
-
-                </div>
+            <!-- Tanda Tangan -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Tanda Tangan</label
+              >
+              <div class="border border-gray-300 rounded-md bg-white">
+                <canvas
+                  id="signature-pad"
+                  class="w-full rounded-md"
+                  style="height: 150px; touch-action: none"
+                ></canvas>
+              </div>
+              <button
+                type="button"
+                id="clear-signature"
+                class="mt-2 px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150"
+              >
+                Hapus Tanda Tangan
+              </button>
             </div>
+          </form>
         </div>
+
+        <!-- Kolom Kanan: Pratinjau Surat -->
+        <div class="md:w-2/3">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-gray-700">
+              Pratinjau Surat
+            </h2>
+            <!-- Wadah untuk tombol -->
+            <div class="flex space-x-2">
+              <button
+                id="copy-button"
+                class="px-5 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150"
+              >
+                Salin Teks Surat
+              </button>
+              <button
+                id="pdf-button"
+                class="px-5 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-150"
+              >
+                Simpan sebagai PDF
+              </button>
+            </div>
+          </div>
+          <div
+            id="copy-message"
+            class="text-green-600 font-medium mb-4 text-right"
+            style="display: none"
+          >
+            Teks surat berhasil disalin!
+          </div>
+          <div
+            id="pdf-error-message"
+            class="text-red-600 font-medium mb-4 text-right"
+            style="display: none"
+          >
+            Gagal membuat PDF. Silakan coba lagi.
+          </div>
+
+          <div
+            id="letter-preview"
+            class="bg-white p-8 md:p-12 rounded-lg shadow-lg min-h-[70vh]"
+          >
+            <!-- Header: Lokasi & Tanggal -->
+            <div class="text-right mb-8">
+              <span id="output-lokasi-tanggal"
+                >[Lokasi], [Tanggal Hari Ini]</span
+              >
+            </div>
+
+            <!-- Tujuan Surat -->
+            <div class="mb-6">
+              <p>Yth. Bapak/Ibu</p>
+              <p>Di tempat</p>
+            </div>
+
+            <!-- Paragraf Pembuka -->
+            <p class="mb-6">
+              Dengan hormat, Saya yang bertanda tangan di bawah ini:
+            </p>
+
+            <!-- Data Diri -->
+            <div class="mb-6 ml-4 personal-data-grid">
+              <span>Nama</span>
+              <span>:</span>
+              <span id="output-nama" class="font-medium">[Nama Lengkap]</span>
+
+              <span>Jenis Kelamin</span>
+              <span>:</span>
+              <span id="output-jenisKelamin">[Jenis Kelamin]</span>
+
+              <span>Tempat tanggal lahir</span>
+              <span>:</span>
+              <span id="output-tempatTanggalLahir"
+                >[Tempat Lahir], [Tanggal Lahir]</span
+              >
+
+              <span>Pendidikan</span>
+              <span>:</span>
+              <span id="output-pendidikan">[Pendidikan Terakhir]</span>
+
+              <span>Alamat</span>
+              <span>:</span>
+              <span id="output-alamat">[Alamat Lengkap]</span>
+
+              <span>Nomor Handphone</span>
+              <span>:</span>
+              <span id="output-handphone">[Nomor Handphone]</span>
+
+              <span>E-mail</span>
+              <span>:</span>
+              <span id="output-email">[E-mail]</span>
+            </div>
+
+            <!-- Paragraf Isi (Tujuan) -->
+            <p class="mb-6 text-justify">
+              Bermaksud mengajukan lamaran pekerjaan pada posisi
+              <strong id="output-posisi" class="font-bold"
+                >[Posisi yang Dilamar]</strong
+              >
+              yang dibutuhkan di
+              <strong id="output-perusahaan" class="font-bold"
+                >[Nama Perusahaan]</strong
+              >, sebagai bahan pertimbangan bersama surat lamaran ini saya telah
+              melampirkan kelengkapan data diri sebagai berikut:
+            </p>
+
+            <!-- Lampiran -->
+            <ol id="output-lampiran" class="list-decimal mb-6 ml-4">
+              <li>[Lampiran 1]</li>
+              <li>[Lampiran 2]</li>
+            </ol>
+
+            <!-- PERBAIKAN FINAL: Bungkus paragraf penutup DAN tanda tangan dalam satu blok
+                         dengan style 'page-break-inside: avoid;' untuk mencegah terpotong. -->
+            <div style="page-break-inside: avoid">
+              <!-- Paragraf Penutup -->
+              <!-- PERBAIKAN: Mengurangi margin bawah untuk hemat ruang -->
+              <p class="mb-8 text-justify">
+                <!-- Diubah dari mb-12 -->
+                Demikian surat permohonan lamaran pekerjaan ini saya buat dengan
+                sebenar-benarnya. Atas perhatian dan waktunya saya ucapkan
+                terima kasih.
+              </p>
+
+              <!-- Tanda Tangan -->
+              <div class="text-right">
+                <!-- PERBAIKAN: Mengurangi margin bawah untuk hemat ruang -->
+                <p class="mb-2">Hormat saya,</p>
+                <div id="output-signature" class="mb-2 flex justify-end">
+                  <img
+                    id="signature-image"
+                    src=""
+                    alt=""
+                    class="max-h-16"
+                    style="display: none"
+                  />
+                </div>
+                <p id="output-nama-bawah" class="font-bold">[Nama Lengkap]</p>
+              </div>
+            </div>
+            <!-- Tutup div pembungkus -->
+          </div>
+        </div>
+      </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Ambil Elemen Input ---
-            const form = document.getElementById('form-surat');
-            const lokasiInput = document.getElementById('lokasi');
-            const tanggalSuratInput = document.getElementById('tanggalSurat'); // Input baru
-            const namaInput = document.getElementById('nama');
-            const jenisKelaminInput = document.getElementById('jenisKelamin');
-            const tempatLahirInput = document.getElementById('tempatLahir');
-            const tanggalLahirInput = document.getElementById('tanggalLahir');
-            const pendidikanInput = document.getElementById('pendidikan');
-            const alamatInput = document.getElementById('alamat');
-            const handphoneInput = document.getElementById('handphone');
-            const emailInput = document.getElementById('email');
-            const posisiInput = document.getElementById('posisi');
-            const perusahaanInput = document.getElementById('perusahaan');
-            const lampiranInput = document.getElementById('lampiran');
-            const copyButton = document.getElementById('copy-button');
-            const copyMessage = document.getElementById('copy-message');
-            const pdfButton = document.getElementById('pdf-button'); // Ambil tombol PDF
-            const pdfErrorMessage = document.getElementById('pdf-error-message'); // Ambil pesan error PDF
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Ambil Elemen Input ---
+        const form = document.getElementById("form-surat");
+        const lokasiInput = document.getElementById("lokasi");
+        const tanggalSuratInput = document.getElementById("tanggalSurat"); // Input baru
+        const namaInput = document.getElementById("nama");
+        const jenisKelaminInput = document.getElementById("jenisKelamin");
+        const tempatLahirInput = document.getElementById("tempatLahir");
+        const tanggalLahirInput = document.getElementById("tanggalLahir");
+        const pendidikanInput = document.getElementById("pendidikan");
+        const alamatInput = document.getElementById("alamat");
+        const handphoneInput = document.getElementById("handphone");
+        const emailInput = document.getElementById("email");
+        const posisiInput = document.getElementById("posisi");
+        const perusahaanInput = document.getElementById("perusahaan");
+        const lampiranInput = document.getElementById("lampiran");
+        const copyButton = document.getElementById("copy-button");
+        const copyMessage = document.getElementById("copy-message");
+        const pdfButton = document.getElementById("pdf-button"); // Ambil tombol PDF
+        const pdfErrorMessage = document.getElementById("pdf-error-message"); // Ambil pesan error PDF
 
-            // --- Signature Pad ---
-            const signaturePad = document.getElementById('signature-pad');
-            const clearSignatureBtn = document.getElementById('clear-signature');
-            const signatureImage = document.getElementById('signature-image');
-            const ctx = signaturePad.getContext('2d');
-            let isDrawing = false;
-            let lastX = 0;
-            let lastY = 0;
-            let signatureData = null;
+        // --- Signature Pad ---
+        const signaturePad = document.getElementById("signature-pad");
+        const clearSignatureBtn = document.getElementById("clear-signature");
+        const signatureImage = document.getElementById("signature-image");
+        const ctx = signaturePad.getContext("2d");
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let signatureData = null;
 
-            function resizeCanvas() {
-                // Simpan data sebelum resize
-                if (signaturePad.width > 0 && signaturePad.height > 0) {
-                    signatureData = signaturePad.toDataURL();
-                }
-                const rect = signaturePad.getBoundingClientRect();
-                signaturePad.width = rect.width;
-                signaturePad.height = rect.height;
-                ctx.strokeStyle = '#1f2937';
-                ctx.lineWidth = 2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                // Restore data setelah resize
-                if (signatureData) {
-                    const img = new Image();
-                    img.onload = function() {
-                        ctx.drawImage(img, 0, 0, signaturePad.width, signaturePad.height);
-                    };
-                    img.src = signatureData;
-                }
+        function resizeCanvas() {
+          // Simpan data sebelum resize
+          if (signaturePad.width > 0 && signaturePad.height > 0) {
+            signatureData = signaturePad.toDataURL();
+          }
+          const rect = signaturePad.getBoundingClientRect();
+          signaturePad.width = rect.width;
+          signaturePad.height = rect.height;
+          ctx.strokeStyle = "#1f2937";
+          ctx.lineWidth = 2;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          // Restore data setelah resize
+          if (signatureData) {
+            const img = new Image();
+            img.onload = function () {
+              ctx.drawImage(img, 0, 0, signaturePad.width, signaturePad.height);
+            };
+            img.src = signatureData;
+          }
+        }
+        resizeCanvas();
+        window.addEventListener("resize", () => {
+          setTimeout(resizeCanvas, 100);
+        });
+
+        function getPosition(e) {
+          const rect = signaturePad.getBoundingClientRect();
+          if (e.touches) {
+            return {
+              x: e.touches[0].clientX - rect.left,
+              y: e.touches[0].clientY - rect.top,
+            };
+          }
+          return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          };
+        }
+
+        function startDrawing(e) {
+          isDrawing = true;
+          const pos = getPosition(e);
+          lastX = pos.x;
+          lastY = pos.y;
+        }
+
+        function draw(e) {
+          if (!isDrawing) return;
+          e.preventDefault();
+          const pos = getPosition(e);
+          ctx.beginPath();
+          ctx.moveTo(lastX, lastY);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+          lastX = pos.x;
+          lastY = pos.y;
+          updateSignaturePreview();
+        }
+
+        function stopDrawing() {
+          isDrawing = false;
+          // Simpan signature data saat selesai menggambar
+          if (signaturePad.width > 0 && signaturePad.height > 0) {
+            signatureData = signaturePad.toDataURL();
+          }
+        }
+
+        function updateSignaturePreview() {
+          const dataURL = signaturePad.toDataURL();
+          signatureImage.src = dataURL;
+          signatureImage.style.display = "block";
+        }
+
+        function clearSignature() {
+          ctx.clearRect(0, 0, signaturePad.width, signaturePad.height);
+          signatureImage.src = "";
+          signatureImage.style.display = "none";
+          signatureData = null;
+        }
+
+        signaturePad.addEventListener("mousedown", startDrawing);
+        signaturePad.addEventListener("mousemove", draw);
+        signaturePad.addEventListener("mouseup", stopDrawing);
+        signaturePad.addEventListener("mouseout", stopDrawing);
+        signaturePad.addEventListener("touchstart", startDrawing, {
+          passive: false,
+        });
+        signaturePad.addEventListener("touchmove", draw, { passive: false });
+        signaturePad.addEventListener("touchend", stopDrawing, {
+          passive: false,
+        });
+        clearSignatureBtn.addEventListener("click", clearSignature);
+
+        // --- Ambil Elemen Output (Pratinjau) ---
+        const outputLokasiTanggal = document.getElementById(
+          "output-lokasi-tanggal",
+        );
+        const outputNama = document.getElementById("output-nama");
+        const outputJenisKelamin = document.getElementById(
+          "output-jenisKelamin",
+        );
+        const outputTempatTanggalLahir = document.getElementById(
+          "output-tempatTanggalLahir",
+        );
+        const outputPendidikan = document.getElementById("output-pendidikan");
+        const outputAlamat = document.getElementById("output-alamat");
+        const outputHandphone = document.getElementById("output-handphone");
+        const outputEmail = document.getElementById("output-email");
+        const outputPosisi = document.getElementById("output-posisi");
+        const outputPerusahaan = document.getElementById("output-perusahaan");
+        const outputLampiran = document.getElementById("output-lampiran");
+        const outputNamaBawah = document.getElementById("output-nama-bawah");
+
+        // --- Set Tanggal Default ke Hari Ini ---
+        const todayDate = new Date();
+        // Format YYYY-MM-DD untuk input type="date"
+        const yyyy = todayDate.getFullYear();
+        const mm = String(todayDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(todayDate.getDate()).padStart(2, "0");
+        tanggalSuratInput.value = `${yyyy}-${mm}-${dd}`;
+
+        // --- Fungsi untuk Update Pratinjau ---
+        function updatePreview() {
+          // 1. Format Tanggal Surat (Dinamis dari Input)
+          let formattedTanggalSurat = "[Tanggal]";
+          if (tanggalSuratInput.value) {
+            try {
+              const tgl = new Date(tanggalSuratInput.value);
+              // Opsi format bahasa Indonesia: 11 Januari 2025
+              const options = {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              };
+              formattedTanggalSurat = tgl.toLocaleDateString("id-ID", options);
+            } catch (e) {
+              formattedTanggalSurat = "[Tanggal]";
             }
-            resizeCanvas();
-            window.addEventListener('resize', () => {
-                setTimeout(resizeCanvas, 100);
+          }
+
+          // 2. Format Tanggal Lahir (dari Input)
+          let formattedTanggalLahir = "[Tanggal Lahir]";
+          if (tanggalLahirInput.value) {
+            try {
+              const tglLahir = new Date(tanggalLahirInput.value);
+              // Tambah timeZone UTC agar tidak salah tanggal karena konversi
+              const tglLahirOptions = {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                timeZone: "UTC",
+              };
+              formattedTanggalLahir = tglLahir.toLocaleDateString(
+                "id-ID",
+                tglLahirOptions,
+              );
+            } catch (e) {
+              console.error("Format tanggal lahir salah:", e);
+              formattedTanggalLahir = "[Tanggal Lahir]";
+            }
+          }
+
+          // 3. Update Teks di Pratinjau (dengan fallback)
+          // Menggunakan tanggal dari input yang baru
+          outputLokasiTanggal.innerText = `${lokasiInput.value || "[Lokasi]"}, ${formattedTanggalSurat}`;
+
+          outputNama.innerText = namaInput.value || "[Nama Lengkap]";
+          outputJenisKelamin.innerText =
+            jenisKelaminInput.value || "[Jenis Kelamin]";
+          outputTempatTanggalLahir.innerText = `${tempatLahirInput.value || "[Tempat Lahir]"}, ${formattedTanggalLahir}`;
+          outputPendidikan.innerText =
+            pendidikanInput.value || "[Pendidikan Terakhir]";
+          outputAlamat.innerText = alamatInput.value || "[Alamat Lengkap]";
+          outputHandphone.innerText =
+            handphoneInput.value || "[Nomor Handphone]";
+          outputEmail.innerText = emailInput.value || "[E-mail]";
+          outputPosisi.innerText = posisiInput.value || "[Posisi yang Dilamar]";
+          outputPerusahaan.innerText =
+            perusahaanInput.value || "[Nama Perusahaan]";
+          outputNamaBawah.innerText = namaInput.value || "[Nama Lengkap]";
+
+          // 4. Update Daftar Lampiran
+          const lampiranText = lampiranInput.value;
+          const lampiranArray = lampiranText
+            .split("\n")
+            .filter((line) => line.trim() !== ""); // Pisahkan per baris & hapus baris kosong
+
+          outputLampiran.innerHTML = ""; // Kosongkan list sebelumnya
+
+          if (lampiranArray.length > 0) {
+            lampiranArray.forEach((item) => {
+              const li = document.createElement("li");
+              li.innerText = item.trim();
+              outputLampiran.appendChild(li);
             });
+          } else {
+            // Jika kosong, tampilkan placeholder
+            outputLampiran.innerHTML = "<li>[Daftar Lampiran]</li>";
+          }
+        }
 
-            function getPosition(e) {
-                const rect = signaturePad.getBoundingClientRect();
-                if (e.touches) {
-                    return {
-                        x: e.touches[0].clientX - rect.left,
-                        y: e.touches[0].clientY - rect.top
-                    };
-                }
-                return {
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
-                };
+        // --- Event Listener ---
+        // Update pratinjau setiap kali ada input di form
+        form.addEventListener("input", updatePreview);
+
+        // Panggil sekali saat load untuk inisialisasi
+        updatePreview();
+
+        // --- Fungsi Tombol Salin ---
+        copyButton.addEventListener("click", () => {
+          const letterPreview = document.getElementById("letter-preview");
+
+          // Buat Range untuk memilih teks
+          const range = document.createRange();
+          range.selectNode(letterPreview);
+
+          // Hapus seleksi sebelumnya dan tambahkan seleksi baru
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+
+          try {
+            // Salin ke clipboard
+            const successful = document.execCommand("copy");
+            if (successful) {
+              // Tampilkan pesan sukses
+              copyMessage.style.display = "block";
+              copyButton.innerText = "Tersalin!";
+
+              // Sembunyikan pesan setelah 2 detik
+              setTimeout(() => {
+                copyMessage.style.display = "none";
+                copyButton.innerText = "Salin Teks Surat";
+              }, 2000);
+            } else {
+              alert("Gagal menyalin. Coba salin secara manual.");
             }
+          } catch (err) {
+            console.error("Gagal menyalin teks: ", err);
+            alert(
+              "Gagal menyalin. Browser Anda mungkin tidak mendukung fitur ini.",
+            );
+          }
 
-            function startDrawing(e) {
-                isDrawing = true;
-                const pos = getPosition(e);
-                lastX = pos.x;
-                lastY = pos.y;
-            }
+          // Hapus seleksi setelah disalin
+          selection.removeAllRanges();
+        });
 
-            function draw(e) {
-                if (!isDrawing) return;
-                e.preventDefault();
-                const pos = getPosition(e);
-                ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-                lastX = pos.x;
-                lastY = pos.y;
-                updateSignaturePreview();
-            }
+        // --- Fungsi Tombol PDF ---
+        pdfButton.addEventListener("click", async () => {
+          const letterPreview = document.getElementById("letter-preview");
+          const nama = namaInput.value || "Pelamar"; // Ambil nama dari input
+          const filename = `Surat Lamaran - ${nama}.pdf`;
 
-            function stopDrawing() {
-                isDrawing = false;
-                // Simpan signature data saat selesai menggambar
-                if (signaturePad.width > 0 && signaturePad.height > 0) {
-                    signatureData = signaturePad.toDataURL();
-                }
-            }
+          // Sembunyikan pesan error sebelumnya
+          pdfErrorMessage.style.display = "none";
 
-            function updateSignaturePreview() {
-                const dataURL = signaturePad.toDataURL();
-                signatureImage.src = dataURL;
-                signatureImage.style.display = 'block';
-            }
+          // Nonaktifkan tombol selama proses
+          pdfButton.disabled = true;
+          pdfButton.innerText = "Memproses...";
 
-            function clearSignature() {
-                ctx.clearRect(0, 0, signaturePad.width, signaturePad.height);
-                signatureImage.src = '';
-                signatureImage.style.display = 'none';
-                signatureData = null;
-            }
-
-            signaturePad.addEventListener('mousedown', startDrawing);
-            signaturePad.addEventListener('mousemove', draw);
-            signaturePad.addEventListener('mouseup', stopDrawing);
-            signaturePad.addEventListener('mouseout', stopDrawing);
-            signaturePad.addEventListener('touchstart', startDrawing, { passive: false });
-            signaturePad.addEventListener('touchmove', draw, { passive: false });
-            signaturePad.addEventListener('touchend', stopDrawing, { passive: false });
-            clearSignatureBtn.addEventListener('click', clearSignature);
-
-            // --- Ambil Elemen Output (Pratinjau) ---
-            const outputLokasiTanggal = document.getElementById('output-lokasi-tanggal');
-            const outputNama = document.getElementById('output-nama');
-            const outputJenisKelamin = document.getElementById('output-jenisKelamin');
-            const outputTempatTanggalLahir = document.getElementById('output-tempatTanggalLahir');
-            const outputPendidikan = document.getElementById('output-pendidikan');
-            const outputAlamat = document.getElementById('output-alamat');
-            const outputHandphone = document.getElementById('output-handphone');
-            const outputEmail = document.getElementById('output-email');
-            const outputPosisi = document.getElementById('output-posisi');
-            const outputPerusahaan = document.getElementById('output-perusahaan');
-            const outputLampiran = document.getElementById('output-lampiran');
-            const outputNamaBawah = document.getElementById('output-nama-bawah');
-
-            // --- Set Tanggal Default ke Hari Ini ---
-            const todayDate = new Date();
-            // Format YYYY-MM-DD untuk input type="date"
-            const yyyy = todayDate.getFullYear();
-            const mm = String(todayDate.getMonth() + 1).padStart(2, '0');
-            const dd = String(todayDate.getDate()).padStart(2, '0');
-            tanggalSuratInput.value = `${yyyy}-${mm}-${dd}`;
-
-            // --- Fungsi untuk Update Pratinjau ---
-            function updatePreview() {
-                // 1. Format Tanggal Surat (Dinamis dari Input)
-                let formattedTanggalSurat = "[Tanggal]";
-                if (tanggalSuratInput.value) {
-                    try {
-                        const tgl = new Date(tanggalSuratInput.value);
-                        // Opsi format bahasa Indonesia: 11 Januari 2025
-                        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                        formattedTanggalSurat = tgl.toLocaleDateString('id-ID', options);
-                    } catch (e) {
-                        formattedTanggalSurat = "[Tanggal]";
-                    }
-                }
-                
-                // 2. Format Tanggal Lahir (dari Input)
-                let formattedTanggalLahir = "[Tanggal Lahir]";
-                if (tanggalLahirInput.value) {
-                    try {
-                        const tglLahir = new Date(tanggalLahirInput.value);
-                        // Tambah timeZone UTC agar tidak salah tanggal karena konversi
-                        const tglLahirOptions = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' };
-                        formattedTanggalLahir = tglLahir.toLocaleDateString('id-ID', tglLahirOptions);
-                    } catch (e) {
-                        console.error("Format tanggal lahir salah:", e);
-                        formattedTanggalLahir = "[Tanggal Lahir]";
-                    }
-                }
-
-                // 3. Update Teks di Pratinjau (dengan fallback)
-                // Menggunakan tanggal dari input yang baru
-                outputLokasiTanggal.innerText = `${lokasiInput.value || "[Lokasi]"}, ${formattedTanggalSurat}`;
-                
-                outputNama.innerText = namaInput.value || "[Nama Lengkap]";
-                outputJenisKelamin.innerText = jenisKelaminInput.value || "[Jenis Kelamin]";
-                outputTempatTanggalLahir.innerText = `${tempatLahirInput.value || "[Tempat Lahir]"}, ${formattedTanggalLahir}`;
-                outputPendidikan.innerText = pendidikanInput.value || "[Pendidikan Terakhir]";
-                outputAlamat.innerText = alamatInput.value || "[Alamat Lengkap]";
-                outputHandphone.innerText = handphoneInput.value || "[Nomor Handphone]";
-                outputEmail.innerText = emailInput.value || "[E-mail]";
-                outputPosisi.innerText = posisiInput.value || "[Posisi yang Dilamar]";
-                outputPerusahaan.innerText = perusahaanInput.value || "[Nama Perusahaan]";
-                outputNamaBawah.innerText = namaInput.value || "[Nama Lengkap]";
-
-                // 4. Update Daftar Lampiran
-                const lampiranText = lampiranInput.value;
-                const lampiranArray = lampiranText.split('\n').filter(line => line.trim() !== ''); // Pisahkan per baris & hapus baris kosong
-                
-                outputLampiran.innerHTML = ''; // Kosongkan list sebelumnya
-                
-                if (lampiranArray.length > 0) {
-                    lampiranArray.forEach(item => {
-                        const li = document.createElement('li');
-                        li.innerText = item.trim();
-                        outputLampiran.appendChild(li);
-                    });
-                } else {
-                    // Jika kosong, tampilkan placeholder
-                    outputLampiran.innerHTML = '<li>[Daftar Lampiran]</li>';
-                }
-            }
-
-            // --- Event Listener ---
-            // Update pratinjau setiap kali ada input di form
-            form.addEventListener('input', updatePreview);
-
-            // Panggil sekali saat load untuk inisialisasi
-            updatePreview();
-
-            // --- Fungsi Tombol Salin ---
-            copyButton.addEventListener('click', () => {
-                const letterPreview = document.getElementById('letter-preview');
-                
-                // Buat Range untuk memilih teks
-                const range = document.createRange();
-                range.selectNode(letterPreview);
-                
-                // Hapus seleksi sebelumnya dan tambahkan seleksi baru
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                try {
-                    // Salin ke clipboard
-                    const successful = document.execCommand('copy');
-                    if (successful) {
-                        // Tampilkan pesan sukses
-                        copyMessage.style.display = 'block';
-                        copyButton.innerText = 'Tersalin!';
-                        
-                        // Sembunyikan pesan setelah 2 detik
-                        setTimeout(() => {
-                            copyMessage.style.display = 'none';
-                            copyButton.innerText = 'Salin Teks Surat';
-                        }, 2000);
-                    } else {
-                         alert('Gagal menyalin. Coba salin secara manual.');
-                    }
-                } catch (err) {
-                    console.error('Gagal menyalin teks: ', err);
-                    alert('Gagal menyalin. Browser Anda mungkin tidak mendukung fitur ini.');
-                }
-
-                // Hapus seleksi setelah disalin
-                selection.removeAllRanges();
-            });
-
-            // --- Fungsi Tombol PDF ---
-            pdfButton.addEventListener('click', async () => {
-                const letterPreview = document.getElementById('letter-preview');
-                const nama = namaInput.value || "Pelamar"; // Ambil nama dari input
-                const filename = `Surat Lamaran - ${nama}.pdf`;
-
-                // Sembunyikan pesan error sebelumnya
-                pdfErrorMessage.style.display = 'none';
-
-                // Nonaktifkan tombol selama proses
-                pdfButton.disabled = true;
-                pdfButton.innerText = 'Memproses...';
-
-                try {
-                    // Buat wrapper div untuk capture
-                    const wrapper = document.createElement('div');
-                    wrapper.style.cssText = `
+          try {
+            // Buat wrapper div untuk capture
+            const wrapper = document.createElement("div");
+            wrapper.style.cssText = `
                         position: absolute;
                         left: -9999px;
                         top: 0;
@@ -539,10 +772,10 @@ Pendukung Sertifikat lainnya</textarea>
                         line-height: 1.5;
                         color: #111827;
                     `;
-                    
-                    // Clone content
-                    const clone = letterPreview.cloneNode(true);
-                    clone.style.cssText = `
+
+            // Clone content
+            const clone = letterPreview.cloneNode(true);
+            clone.style.cssText = `
                         width: 100%;
                         min-height: auto;
                         background: white;
@@ -550,116 +783,117 @@ Pendukung Sertifikat lainnya</textarea>
                         box-shadow: none;
                         border-radius: 0;
                     `;
-                    clone.classList.remove('min-h-[70vh]', 'shadow-lg', 'rounded-lg');
-                    
-                    // Fix style untuk ordered list di PDF
-                    const olElement = clone.querySelector('#output-lampiran');
-                    if (olElement) {
-                        // Ganti ol dengan table untuk alignment yang tepat
-                        const liElements = olElement.querySelectorAll('li');
-                        const table = document.createElement('table');
-                        table.style.cssText = `
+            clone.classList.remove("min-h-[70vh]", "shadow-lg", "rounded-lg");
+
+            // Fix style untuk ordered list di PDF
+            const olElement = clone.querySelector("#output-lampiran");
+            if (olElement) {
+              // Ganti ol dengan table untuk alignment yang tepat
+              const liElements = olElement.querySelectorAll("li");
+              const table = document.createElement("table");
+              table.style.cssText = `
                             border-collapse: collapse;
                             margin-left: 1em;
                             margin-bottom: 1.5em;
                         `;
-                        
-                        liElements.forEach((li, index) => {
-                            const tr = document.createElement('tr');
-                            const tdNum = document.createElement('td');
-                            const tdText = document.createElement('td');
-                            
-                            tdNum.style.cssText = `
+
+              liElements.forEach((li, index) => {
+                const tr = document.createElement("tr");
+                const tdNum = document.createElement("td");
+                const tdText = document.createElement("td");
+
+                tdNum.style.cssText = `
                                 vertical-align: top;
                                 padding-right: 0.5em;
                                 text-align: right;
                                 white-space: nowrap;
                             `;
-                            tdNum.textContent = (index + 1) + '.';
-                            
-                            tdText.style.cssText = `
+                tdNum.textContent = index + 1 + ".";
+
+                tdText.style.cssText = `
                                 vertical-align: top;
                             `;
-                            tdText.textContent = li.textContent;
-                            
-                            tr.appendChild(tdNum);
-                            tr.appendChild(tdText);
-                            table.appendChild(tr);
-                        });
-                        
-                        olElement.parentNode.replaceChild(table, olElement);
-                    }
+                tdText.textContent = li.textContent;
 
-                    wrapper.appendChild(clone);
-                    document.body.appendChild(wrapper);
-                    
-                    // Tunggu render
-                    await new Promise(r => setTimeout(r, 300));
-                    
-                    // Capture dengan html2canvas
-                    const canvas = await html2canvas(wrapper, {
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#ffffff',
-                        logging: false,
-                        width: 794,
-                        windowWidth: 794
-                    });
-                    
-                    // Hapus wrapper
-                    document.body.removeChild(wrapper);
-                    
-                    // Buat PDF dengan jsPDF
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF({
-                        orientation: 'portrait',
-                        unit: 'mm',
-                        format: 'a4'
-                    });
-                    
-                    // Hitung dimensi
-                    const imgWidth = 210; // A4 width in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    const pageHeight = 297; // A4 height in mm
-                    
-                    // Tambah gambar ke PDF
-                    const imgData = canvas.toDataURL('image/png', 1.0);
-                    
-                    let heightLeft = imgHeight;
-                    let position = 0;
-                    
-                    // Halaman pertama
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    
-                    // Tambah halaman jika perlu
-                    while (heightLeft > 0) {
-                        position = heightLeft - imgHeight;
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-                    }
-                    
-                    // Simpan PDF
-                    pdf.save(filename);
-                    
-                } catch (err) {
-                    console.error("Gagal membuat PDF:", err);
-                    pdfErrorMessage.style.display = 'block';
-                    setTimeout(() => {
-                        pdfErrorMessage.style.display = 'none';
-                    }, 3000);
-                    
-                    // Cleanup jika error
-                    const wrapper = document.querySelector('div[style*="left: -9999px"]');
-                    if (wrapper) document.body.removeChild(wrapper);
-                } finally {
-                    pdfButton.disabled = false;
-                    pdfButton.innerText = 'Simpan sebagai PDF';
-                }
+                tr.appendChild(tdNum);
+                tr.appendChild(tdText);
+                table.appendChild(tr);
+              });
+
+              olElement.parentNode.replaceChild(table, olElement);
+            }
+
+            wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
+
+            // Tunggu render
+            await new Promise((r) => setTimeout(r, 300));
+
+            // Capture dengan html2canvas
+            const canvas = await html2canvas(wrapper, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: "#ffffff",
+              logging: false,
+              width: 794,
+              windowWidth: 794,
             });
+
+            // Hapus wrapper
+            document.body.removeChild(wrapper);
+
+            // Buat PDF dengan jsPDF
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4",
+            });
+
+            // Hitung dimensi
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const pageHeight = 297; // A4 height in mm
+
+            // Tambah gambar ke PDF
+            const imgData = canvas.toDataURL("image/png", 1.0);
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            // Halaman pertama
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            // Tambah halaman jika perlu
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              pdf.addPage();
+              pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+
+            // Simpan PDF
+            pdf.save(filename);
+          } catch (err) {
+            console.error("Gagal membuat PDF:", err);
+            pdfErrorMessage.style.display = "block";
+            setTimeout(() => {
+              pdfErrorMessage.style.display = "none";
+            }, 3000);
+
+            // Cleanup jika error
+            const wrapper = document.querySelector(
+              'div[style*="left: -9999px"]',
+            );
+            if (wrapper) document.body.removeChild(wrapper);
+          } finally {
+            pdfButton.disabled = false;
+            pdfButton.innerText = "Simpan sebagai PDF";
+          }
         });
+      });
     </script>
-</body>
+  </body>
 </html>
