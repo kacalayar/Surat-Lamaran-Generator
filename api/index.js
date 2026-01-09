@@ -1,20 +1,20 @@
- const express = require('express');
- const path = require('path');
+const express = require('express');
+const path = require('path');
+
+const app = express();
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
  
- const app = express();
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
  
- app.use(express.static(path.join(__dirname, '..', 'public')));
- 
- app.get('/', (req, res) => {
-   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
- });
- 
- const PORT = process.env.PORT || 3000;
- 
- if (require.main === module) {
-   app.listen(PORT, () => {
-     console.log(`Server berjalan di http://localhost:${PORT}`);
-   });
- }
- 
- module.exports = app;
+const PORT = process.env.PORT || 3000;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
