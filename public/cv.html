@@ -30,19 +30,21 @@
              font-weight: 700;
              letter-spacing: 0.15em;
              text-transform: uppercase;
-             border-bottom: 2px solid #1f2937;
-             padding-bottom: 0.25rem;
+            border-bottom: 2px solid #374151;
+            padding-bottom: 0.35rem;
              margin-bottom: 0.75rem;
+            display: inline-block;
          }
          .photo-placeholder {
-             width: 120px;
-             height: 120px;
-             border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
              background: #e5e7eb;
              display: flex;
              align-items: center;
              justify-content: center;
              overflow: hidden;
+            border: 3px solid #374151;
          }
          .photo-placeholder img {
              width: 100%;
@@ -64,7 +66,8 @@
                  </div>
                  <nav class="flex space-x-4">
                      <a href="index.html" class="text-slate-300 hover:text-white transition">Surat Lamaran</a>
-                     <a href="cv.html" class="text-white font-semibold border-b-2 border-blue-400">CV</a>
+                    <a href="cv.html" class="text-white font-semibold border-b-2 border-blue-400">CV Template 1</a>
+                    <a href="cv2.html" class="text-slate-300 hover:text-white transition">CV Template 2</a>
                  </nav>
              </div>
          </div>
@@ -152,37 +155,40 @@
                  </div>
  
                  <!-- CV Preview -->
-                <div id="cv-preview" class="rounded-lg shadow-lg overflow-hidden" style="min-height: 800px; background: #f5f5f5;">
+               <div id="cv-preview" class="rounded-lg shadow-lg overflow-hidden" style="min-height: 800px; background: white;">
                     <!-- Header CV - Background Abu-abu -->
-                    <div class="bg-gray-200 px-8 py-6 text-center">
-                        <h1 id="out-nama" class="cv-name text-3xl text-gray-900 mb-3">LUKMAN ALI</h1>
-                        <p id="out-posisi" class="cv-position text-gray-700 text-sm tracking-widest">OPERATOR  EXCAVATOR</p>
-                     </div>
- 
-                    <!-- Garis Pemisah -->
-                    <div class="border-t-2 border-gray-400 mx-8"></div>
-
-                    <!-- Content Area -->
-                    <div class="p-8 bg-white">
-                        <!-- Foto dan Profil Section -->
-                        <div class="flex mb-6">
-                            <div class="mr-6 flex-shrink-0">
-                                <div class="photo-placeholder" id="photo-container">
-                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                </div>
-                             </div>
-                            <div class="flex-1">
-                                <h2 class="section-title text-sm text-gray-900">PROFIL</h2>
-                                <p id="out-profil" class="text-xs text-gray-700 text-justify leading-relaxed">[Deskripsi profil akan muncul di sini]</p>
-                             </div>
+                    <div class="px-8 py-6 bg-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 id="out-nama" class="cv-name text-3xl text-gray-900 mb-2">LUKMAN ALI</h1>
+                                <p id="out-posisi" class="cv-position text-gray-700 text-sm tracking-widest">O P E R A T O R&nbsp;&nbsp;&nbsp;E X C A V A T O R</p>
+                            </div>
+                            <div class="photo-placeholder flex-shrink-0" id="photo-container">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Garis Pemisah Hitam -->
+                    <div class="border-t-2 border-gray-800"></div>
+
+                    <!-- Profil Section - Full Width dengan Background -->
+                    <div class="px-8 py-5 bg-white">
+                        <h2 class="section-title text-sm text-gray-900">PROFIL</h2>
+                        <p id="out-profil" class="text-xs text-gray-700 text-justify leading-relaxed mt-2">[Deskripsi profil akan muncul di sini]</p>
+                    </div>
+
+                    <!-- Garis Pemisah di bawah Profil -->
+                    <div class="border-t border-gray-400 mx-8"></div>
  
+                    <!-- Content Area - 2 Kolom -->
+                    <div class="px-8 py-6 bg-white">
                         <!-- 2 Column Layout -->
-                        <div class="flex gap-6">
+                        <div class="flex">
                             <!-- Kolom Kiri -->
-                            <div class="w-2/5">
+                            <div class="w-2/5 pr-6 border-r border-gray-400">
                                 <!-- Kontak -->
                                 <div class="mb-6">
                                     <h2 class="section-title text-sm text-gray-900">KONTAK</h2>
@@ -221,7 +227,7 @@ kec.Tambakrejo, Kab.Bojonegoro</span>
                              </div>
  
                             <!-- Kolom Kanan -->
-                            <div class="w-3/5">
+                            <div class="w-3/5 pl-6">
                                 <!-- Pengalaman -->
                                 <div class="mb-6">
                                     <h2 class="section-title text-sm text-gray-900">PENGALAMAN</h2>
@@ -361,14 +367,16 @@ kec.Tambakrejo, Kab.Bojonegoro</span>
                  pdfButton.textContent = 'Memproses...';
  
                  try {
+                    // A4 size in pixels at 96 DPI: 794 x 1123
+                    const a4Width = 794;
+                    
                      const wrapper = document.createElement('div');
                      wrapper.style.cssText = `
                          position: absolute;
                          left: -9999px;
                          top: 0;
-                         width: 794px;
-                         background: #f5f5f5;
-                         padding: 40px;
+                        width: ${a4Width}px;
+                        background: white;
                          font-family: Montserrat, sans-serif;
                      `;
  
@@ -376,8 +384,7 @@ kec.Tambakrejo, Kab.Bojonegoro</span>
                      clone.style.cssText = `
                          width: 100%;
                          min-height: auto;
-                         background: #f5f5f5;
-                         padding: 40px;
+                        background: white;
                          box-shadow: none;
                          border-radius: 0;
                      `;
@@ -396,10 +403,10 @@ kec.Tambakrejo, Kab.Bojonegoro</span>
                          scale: 2,
                          useCORS: true,
                          allowTaint: true,
-                         backgroundColor: '#f5f5f5',
+                        backgroundColor: '#ffffff',
                          logging: false,
-                         width: 794,
-                         windowWidth: 794
+                        width: a4Width,
+                        windowWidth: a4Width
                      });
  
                      document.body.removeChild(wrapper);

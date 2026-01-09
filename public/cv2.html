@@ -1,0 +1,418 @@
+ <!DOCTYPE html>
+ <html lang="id">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>CV Generator - Template Modern</title>
+     <link href="output.css" rel="stylesheet">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <style>
+         body { font-family: 'Inter', sans-serif; }
+         #cv-preview {
+             font-family: 'Inter', sans-serif;
+         }
+         #cv-preview .section-title {
+             font-weight: 700;
+             font-size: 0.875rem;
+             border-bottom: 1px solid #1f2937;
+             padding-bottom: 0.25rem;
+             margin-bottom: 0.75rem;
+         }
+     </style>
+ </head>
+ <body class="bg-gray-100 min-h-screen">
+     <!-- Header -->
+     <header class="bg-gradient-to-r from-slate-800 to-slate-700 shadow-lg">
+         <div class="container mx-auto max-w-7xl px-4 py-5">
+             <div class="flex items-center justify-between">
+                 <div class="flex items-center space-x-3">
+                     <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                     </svg>
+                     <h1 class="text-2xl md:text-3xl font-bold text-white">CV Generator</h1>
+                 </div>
+                 <nav class="flex space-x-4">
+                     <a href="index.html" class="text-slate-300 hover:text-white transition">Surat Lamaran</a>
+                     <a href="cv.html" class="text-slate-300 hover:text-white transition">CV Template 1</a>
+                     <a href="cv2.html" class="text-white font-semibold border-b-2 border-blue-400">CV Template 2</a>
+                 </nav>
+             </div>
+         </div>
+     </header>
+ 
+     <main class="container mx-auto max-w-7xl p-4 md:p-8">
+         <div class="md:flex md:space-x-8">
+             <!-- Kolom Kiri: Form Input -->
+             <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-lg mb-8 md:mb-0 max-h-[85vh] overflow-y-auto">
+                 <h2 class="text-2xl font-semibold mb-6 text-gray-700">Data CV</h2>
+                 <form id="form-cv">
+                     <!-- Data Utama -->
+                     <div class="mb-4">
+                         <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                         <input type="text" id="nama" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Pedro Fernandes">
+                     </div>
+                     <div class="mb-4">
+                         <label for="posisi" class="block text-sm font-medium text-gray-700 mb-1">Posisi/Jabatan</label>
+                         <input type="text" id="posisi" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Digital Marketer">
+                     </div>
+ 
+                     <!-- Kontak -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Kontak</h3>
+                         <div class="mb-3">
+                             <label for="telepon" class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
+                             <input type="tel" id="telepon" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="+123-456-7890">
+                         </div>
+                         <div class="mb-3">
+                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                             <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="hello@email.com">
+                         </div>
+                         <div class="mb-3">
+                             <label for="website" class="block text-sm font-medium text-gray-700 mb-1">Website/Social</label>
+                             <input type="text" id="website" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="@username">
+                         </div>
+                         <div class="mb-3">
+                             <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                             <input type="text" id="alamat" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="123 Anywhere St., Any City">
+                         </div>
+                     </div>
+ 
+                     <!-- Profil -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Profil</h3>
+                         <textarea id="profil" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Deskripsi singkat tentang diri Anda..."></textarea>
+                     </div>
+ 
+                     <!-- Kemampuan Utama -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Kemampuan Utama</h3>
+                         <textarea id="kemampuan" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Digital Advertising&#10;SEO&#10;Social Media Management&#10;Email Marketing&#10;Analytics&#10;Copywriting & Content Planning"></textarea>
+                     </div>
+ 
+                     <!-- Pengalaman -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Pengalaman Kerja</h3>
+                         <div id="pengalaman-container">
+                             <div class="pengalaman-item mb-4 p-3 bg-gray-50 rounded-md">
+                                 <input type="text" class="exp-title w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Judul Posisi">
+                                 <input type="text" class="exp-company w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Nama Perusahaan">
+                                 <input type="text" class="exp-period w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="2021 - 2023">
+                                 <textarea class="exp-desc w-full px-3 py-2 border border-gray-300 rounded-md" rows="3" placeholder="Deskripsi pekerjaan (satu per baris)"></textarea>
+                             </div>
+                         </div>
+                         <button type="button" id="add-pengalaman" class="text-blue-600 text-sm hover:underline">+ Tambah Pengalaman</button>
+                     </div>
+ 
+                     <!-- Pendidikan -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Pendidikan</h3>
+                         <div id="pendidikan-container">
+                             <div class="pendidikan-item mb-4 p-3 bg-gray-50 rounded-md">
+                                 <input type="text" class="edu-title w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="S1 Ilmu Komunikasi Universitas ABC">
+                                 <input type="text" class="edu-period w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="2016 - 2020">
+                             </div>
+                         </div>
+                         <button type="button" id="add-pendidikan" class="text-blue-600 text-sm hover:underline">+ Tambah Pendidikan</button>
+                     </div>
+ 
+                     <!-- Portfolio -->
+                     <div class="border-t pt-4 mt-4">
+                         <h3 class="font-semibold text-gray-700 mb-3">Portfolio</h3>
+                         <input type="text" id="portfolio" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="www.yourwebsite.com">
+                     </div>
+                 </form>
+             </div>
+ 
+             <!-- Kolom Kanan: Preview -->
+             <div class="md:w-2/3">
+                 <div class="flex justify-between items-center mb-4">
+                     <h2 class="text-2xl font-semibold text-gray-700">Preview CV</h2>
+                     <button id="pdf-button" class="px-5 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 transition duration-150">
+                         Simpan sebagai PDF
+                     </button>
+                 </div>
+ 
+                 <!-- CV Preview -->
+                 <div id="cv-preview" class="bg-white rounded-lg shadow-lg p-10" style="min-height: 800px;">
+                     <!-- Header CV -->
+                     <div class="text-center mb-4">
+                         <h1 id="out-nama" class="text-3xl font-bold text-gray-900 mb-1">Pedro Fernandes</h1>
+                         <p id="out-posisi" class="text-gray-600 text-sm">Digital Marketer</p>
+                     </div>
+ 
+                     <!-- Kontak - Satu Baris -->
+                     <div class="border-t border-b border-gray-300 py-2 mb-6">
+                         <p id="out-kontak" class="text-xs text-gray-600 text-center">
+                             +123-456-7890 | hello@email.com | @username | 123 Anywhere St., Any City
+                         </p>
+                     </div>
+ 
+                     <!-- Profil -->
+                     <div class="mb-5">
+                         <h2 class="section-title">Profil</h2>
+                         <p id="out-profil" class="text-xs text-gray-700 text-justify leading-relaxed">[Deskripsi profil akan muncul di sini]</p>
+                     </div>
+ 
+                     <!-- Kemampuan Utama -->
+                     <div class="mb-5">
+                         <h2 class="section-title">Kemampuan Utama</h2>
+                         <div id="out-kemampuan" class="grid grid-cols-2 gap-x-8 gap-y-1 text-xs">
+                             <div class="flex items-start"><span class="mr-2">•</span><span>Digital Advertising</span></div>
+                             <div class="flex items-start"><span class="mr-2">•</span><span>Analytics</span></div>
+                         </div>
+                     </div>
+ 
+                     <!-- Pengalaman Kerja -->
+                     <div class="mb-5">
+                         <h2 class="section-title">Pengalaman Kerja</h2>
+                         <div id="out-pengalaman" class="space-y-4">
+                             <div class="exp-item">
+                                 <div class="flex justify-between items-start">
+                                     <p class="font-bold text-xs">Digital Marketing Specialist di Company Name</p>
+                                     <p class="text-xs text-gray-600">2021 - 2023</p>
+                                 </div>
+                                 <ul class="text-xs list-disc list-outside ml-4 mt-1 text-justify">
+                                     <li>Deskripsi pekerjaan</li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+ 
+                     <!-- Pendidikan -->
+                     <div class="mb-5">
+                         <h2 class="section-title">Pendidikan</h2>
+                         <div id="out-pendidikan" class="space-y-2">
+                             <div class="flex justify-between items-start">
+                                 <div class="flex items-start"><span class="mr-2">•</span><span class="text-xs">S1 Ilmu Komunikasi Universitas ABC</span></div>
+                                 <p class="text-xs text-gray-600">2016 - 2020</p>
+                             </div>
+                         </div>
+                     </div>
+ 
+                     <!-- Portfolio -->
+                     <div>
+                         <h2 class="section-title">Portfolio</h2>
+                         <div class="flex items-start">
+                             <span class="mr-2 text-xs">•</span>
+                             <a id="out-portfolio" href="#" class="text-xs text-blue-600 underline">www.yourwebsite.com</a>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </main>
+ 
+     <script>
+         document.addEventListener('DOMContentLoaded', () => {
+             const form = document.getElementById('form-cv');
+             const pdfButton = document.getElementById('pdf-button');
+ 
+             // Output elements
+             const outNama = document.getElementById('out-nama');
+             const outPosisi = document.getElementById('out-posisi');
+             const outKontak = document.getElementById('out-kontak');
+             const outProfil = document.getElementById('out-profil');
+             const outKemampuan = document.getElementById('out-kemampuan');
+             const outPengalaman = document.getElementById('out-pengalaman');
+             const outPendidikan = document.getElementById('out-pendidikan');
+             const outPortfolio = document.getElementById('out-portfolio');
+ 
+             // Add pengalaman
+             document.getElementById('add-pengalaman').addEventListener('click', () => {
+                 const container = document.getElementById('pengalaman-container');
+                 const newItem = document.createElement('div');
+                 newItem.className = 'pengalaman-item mb-4 p-3 bg-gray-50 rounded-md';
+                 newItem.innerHTML = `
+                     <input type="text" class="exp-title w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Judul Posisi">
+                     <input type="text" class="exp-company w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="Nama Perusahaan">
+                     <input type="text" class="exp-period w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="2021 - 2023">
+                     <textarea class="exp-desc w-full px-3 py-2 border border-gray-300 rounded-md" rows="3" placeholder="Deskripsi pekerjaan (satu per baris)"></textarea>
+                     <button type="button" class="remove-exp text-red-500 text-sm mt-1 hover:underline">Hapus</button>
+                 `;
+                 container.appendChild(newItem);
+                 newItem.querySelector('.remove-exp').addEventListener('click', () => newItem.remove());
+                 updatePreview();
+             });
+ 
+             // Add pendidikan
+             document.getElementById('add-pendidikan').addEventListener('click', () => {
+                 const container = document.getElementById('pendidikan-container');
+                 const newItem = document.createElement('div');
+                 newItem.className = 'pendidikan-item mb-4 p-3 bg-gray-50 rounded-md';
+                 newItem.innerHTML = `
+                     <input type="text" class="edu-title w-full px-3 py-2 border border-gray-300 rounded-md mb-2" placeholder="S1 Ilmu Komunikasi Universitas ABC">
+                     <input type="text" class="edu-period w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="2016 - 2020">
+                     <button type="button" class="remove-edu text-red-500 text-sm mt-1 hover:underline">Hapus</button>
+                 `;
+                 container.appendChild(newItem);
+                 newItem.querySelector('.remove-edu').addEventListener('click', () => newItem.remove());
+                 updatePreview();
+             });
+ 
+             // Update preview
+             function updatePreview() {
+                 const nama = document.getElementById('nama').value || 'Pedro Fernandes';
+                 const posisi = document.getElementById('posisi').value || 'Digital Marketer';
+                 const telepon = document.getElementById('telepon').value || '+123-456-7890';
+                 const email = document.getElementById('email').value || 'hello@email.com';
+                 const website = document.getElementById('website').value || '@username';
+                 const alamat = document.getElementById('alamat').value || '123 Anywhere St., Any City';
+ 
+                 outNama.textContent = nama;
+                 outPosisi.textContent = posisi;
+                 outKontak.textContent = `${telepon} | ${email} | ${website} | ${alamat}`;
+                 outProfil.textContent = document.getElementById('profil').value || '[Deskripsi profil akan muncul di sini]';
+ 
+                 // Kemampuan (2 kolom)
+                 const kemampuanText = document.getElementById('kemampuan').value;
+                 const kemampuanList = kemampuanText.split('\n').filter(line => line.trim());
+                 if (kemampuanList.length > 0) {
+                     outKemampuan.innerHTML = kemampuanList.map(k => 
+                         `<div class="flex items-start"><span class="mr-2">•</span><span>${k.trim()}</span></div>`
+                     ).join('');
+                 } else {
+                     outKemampuan.innerHTML = '<div class="flex items-start"><span class="mr-2">•</span><span>[Kemampuan]</span></div>';
+                 }
+ 
+                 // Pengalaman
+                 const expItems = document.querySelectorAll('.pengalaman-item');
+                 let expHTML = '';
+                 expItems.forEach(item => {
+                     const title = item.querySelector('.exp-title').value || '[Judul Posisi]';
+                     const company = item.querySelector('.exp-company').value || '[Perusahaan]';
+                     const period = item.querySelector('.exp-period').value || '[Periode]';
+                     const desc = item.querySelector('.exp-desc').value;
+                     const descList = desc.split('\n').filter(line => line.trim());
+                     
+                     expHTML += `<div class="exp-item mb-3">
+                         <div class="flex justify-between items-start">
+                             <p class="font-bold text-xs">${title} di ${company}</p>
+                             <p class="text-xs text-gray-600 flex-shrink-0 ml-4">${period}</p>
+                         </div>
+                         ${descList.length > 0 ? `<ul class="text-xs list-disc list-outside ml-4 mt-1 text-justify">${descList.map(d => `<li>${d.trim()}</li>`).join('')}</ul>` : ''}
+                     </div>`;
+                 });
+                 outPengalaman.innerHTML = expHTML || '<div class="exp-item"><p class="text-xs">[Pengalaman kerja]</p></div>';
+ 
+                 // Pendidikan
+                 const eduItems = document.querySelectorAll('.pendidikan-item');
+                 let eduHTML = '';
+                 eduItems.forEach(item => {
+                     const title = item.querySelector('.edu-title').value || '[Pendidikan]';
+                     const period = item.querySelector('.edu-period').value || '[Periode]';
+                     
+                     eduHTML += `<div class="flex justify-between items-start">
+                         <div class="flex items-start"><span class="mr-2">•</span><span class="text-xs">${title}</span></div>
+                         <p class="text-xs text-gray-600 flex-shrink-0 ml-4">${period}</p>
+                     </div>`;
+                 });
+                 outPendidikan.innerHTML = eduHTML || '<div class="text-xs">[Pendidikan]</div>';
+ 
+                 // Portfolio
+                 const portfolio = document.getElementById('portfolio').value || 'www.yourwebsite.com';
+                 outPortfolio.textContent = portfolio;
+                 outPortfolio.href = portfolio.startsWith('http') ? portfolio : `https://${portfolio}`;
+             }
+ 
+             // Listen for input changes
+             form.addEventListener('input', updatePreview);
+ 
+             // PDF Generation
+             pdfButton.addEventListener('click', async () => {
+                 const cvPreview = document.getElementById('cv-preview');
+                 const nama = document.getElementById('nama').value || 'CV';
+                 const filename = `CV - ${nama}.pdf`;
+ 
+                 pdfButton.disabled = true;
+                 pdfButton.textContent = 'Memproses...';
+ 
+                 try {
+                     const a4Width = 794;
+                     
+                     const wrapper = document.createElement('div');
+                     wrapper.style.cssText = `
+                         position: absolute;
+                         left: -9999px;
+                         top: 0;
+                         width: ${a4Width}px;
+                         background: white;
+                         font-family: Inter, sans-serif;
+                     `;
+ 
+                     const clone = cvPreview.cloneNode(true);
+                     clone.style.cssText = `
+                         width: 100%;
+                         min-height: auto;
+                         background: white;
+                         padding: 40px;
+                         box-shadow: none;
+                         border-radius: 0;
+                     `;
+ 
+                     clone.querySelectorAll('ul').forEach(ul => {
+                         ul.style.cssText = 'list-style-type: disc; list-style-position: outside; padding-left: 1rem;';
+                     });
+ 
+                     wrapper.appendChild(clone);
+                     document.body.appendChild(wrapper);
+ 
+                     await new Promise(r => setTimeout(r, 500));
+ 
+                     const canvas = await html2canvas(wrapper, {
+                         scale: 2,
+                         useCORS: true,
+                         allowTaint: true,
+                         backgroundColor: '#ffffff',
+                         logging: false,
+                         width: a4Width,
+                         windowWidth: a4Width
+                     });
+ 
+                     document.body.removeChild(wrapper);
+ 
+                     const { jsPDF } = window.jspdf;
+                     const pdf = new jsPDF({
+                         orientation: 'portrait',
+                         unit: 'mm',
+                         format: 'a4'
+                     });
+ 
+                     const imgWidth = 210;
+                     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                     const pageHeight = 297;
+                     const imgData = canvas.toDataURL('image/png', 1.0);
+ 
+                     let heightLeft = imgHeight;
+                     let position = 0;
+ 
+                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                     heightLeft -= pageHeight;
+ 
+                     while (heightLeft > 0) {
+                         position = heightLeft - imgHeight;
+                         pdf.addPage();
+                         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                         heightLeft -= pageHeight;
+                     }
+ 
+                     pdf.save(filename);
+ 
+                 } catch (err) {
+                     console.error('Gagal membuat PDF:', err);
+                     alert('Gagal membuat PDF. Silakan coba lagi.');
+                 } finally {
+                     pdfButton.disabled = false;
+                     pdfButton.textContent = 'Simpan sebagai PDF';
+                 }
+             });
+ 
+             // Initial preview
+             updatePreview();
+         });
+     </script>
+ </body>
+ </html>
