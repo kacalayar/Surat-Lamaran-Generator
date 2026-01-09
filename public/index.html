@@ -516,50 +516,90 @@ Pendukung Sertifikat lainnya</textarea>
                 pdfButton.disabled = true;
                 pdfButton.innerText = 'Memproses...';
 
-                // Scroll ke atas halaman dan tunggu sebentar
-                window.scrollTo(0, 0);
-                letterPreview.scrollIntoView({ behavior: 'instant', block: 'start' });
-                await new Promise(resolve => setTimeout(resolve, 300));
+                try {
+                    // Buat clone element untuk PDF (solusi mobile)
+                    const clone = letterPreview.cloneNode(true);
+                    clone.id = 'pdf-clone';
+                    clone.style.cssText = `
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 700px;
+                        min-height: auto;
+                        background: white;
+                        padding: 48px;
+                        font-family: Georgia, serif;
+                        font-size: 15px;
+                        line-height: 1.5;
+                        color: #111827;
+                        z-index: -9999;
+                        visibility: visible;
+                    `;
+                    
+                    // Buat container tersembunyi
+                    const container = document.createElement('div');
+                    container.id = 'pdf-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        left: 0;
+                        top: 0;
+                        width: 700px;
+                        height: auto;
+                        overflow: visible;
+                        z-index: -9999;
+                        background: white;
+                    `;
+                    container.appendChild(clone);
+                    document.body.appendChild(container);
+                    
+                    // Tunggu render
+                    await new Promise(resolve => setTimeout(resolve, 500));
 
-                // --- PERBAIKAN: Hapus min-height sementara ---
-                // Simpan style asli (jika ada) dan class
-                const originalMinHeight = letterPreview.style.minHeight;
-                const originalClasses = letterPreview.className;
-                const originalWidth = letterPreview.style.width;
-                const originalPosition = letterPreview.style.position;
-                const originalLeft = letterPreview.style.left;
-                const originalTop = letterPreview.style.top;
-                
-                // Hapus min-height agar tinggi elemen pas dengan kontennya
-                letterPreview.style.minHeight = 'auto';
-                // Hapus class min-h-[70vh] dari Tailwind
-                letterPreview.classList.remove('min-h-[70vh]');
-                // Set width tetap untuk konsistensi di mobile
-                letterPreview.style.width = '700px';
-                
-                // Force reflow
-                letterPreview.offsetHeight;
+                    // Opsi untuk html2pdf
+                    const options = {
+                        margin:       [0.5, 0.75, 0.5, 0.75],
+                        filename:     filename,
+                        image:        { type: 'png', quality: 1 },
+                        html2canvas:  { 
+                            scale: 2,
+                            useCORS: true, 
+                            logging: false,
+                            allowTaint: true,
+                            backgroundColor: '#ffffff',
+                            width: 700,
+                            windowWidth: 700
+                        },
+                        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                    };
 
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                // Opsi untuk html2pdf
-                const options = {
-                    margin:       [0.5, 0.75, 0.5, 0.75], // PERBAIKAN: margin: [top, right, bottom, left] (dalam inci)
-                    filename:     filename,
-                    image:        { type: 'png', quality: 1 },
-                    html2canvas:  { 
-                        scale: 2,
-                        useCORS: true, 
-                        logging: false,
-                        allowTaint: true,
-                        backgroundColor: '#ffffff',
-                        onclone: function(clonedDoc) {
-                            const clonedPreview = clonedDoc.getElementById('letter-preview');
-                            if (clonedPreview) {
-                                clonedPreview.style.width = '700px';
-                                clonedPreview.style.minHeight = 'auto';
-                                clonedPreview.style.position = 'relative';
-                            }
+                    // Generate PDF dari clone
+                    await html2pdf().from(clone).set(options).save();
+                    
+                    // Hapus container
+                    document.body.removeChild(container);
+                    
+                } catch (err) {
+                    console.error("Gagal membuat PDF:", err);
+                    pdfErrorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        pdfErrorMessage.style.display = 'none';
+                    }, 3000);
+                    
+                    // Hapus container jika ada error
+                    const container = document.getElementById('pdf-container');
+                    if (container) {
+                        document.body.removeChild(container);
+                    }
+                } finally {
+                    pdfButton.disabled = false;
+                    pdfButton.innerText = 'Simpan sebagai PDF';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+*** End of File
                         }
                     },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
