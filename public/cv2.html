@@ -22,7 +22,7 @@
       }
       #cv-preview .section-title {
         font-weight: 700;
-        font-size: 0.875rem;
+        font-size: 1rem;
         border-bottom: 1px solid #1f2937;
         padding-bottom: 0.25rem;
         margin-bottom: 0.75rem;
@@ -90,7 +90,7 @@
                 type="text"
                 id="nama"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Pedro Fernandes"
+                placeholder="Nama Lengkap"
               />
             </div>
             <div class="mb-4">
@@ -103,7 +103,7 @@
                 type="text"
                 id="posisi"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Digital Marketer"
+                placeholder="Posisi/Jabatan"
               />
             </div>
 
@@ -300,19 +300,19 @@
             <!-- Header CV -->
             <div class="text-center mb-4">
               <h1 id="out-nama" class="text-3xl font-bold text-gray-900 mb-1">
-                Pedro Fernandes
+                Nama
               </h1>
-              <p id="out-posisi" class="text-gray-600 text-sm">
-                Digital Marketer
+              <p id="out-posisi" class="text-gray-600 text-base">
+                Posisi/Jabatan
               </p>
             </div>
 
             <!-- Kontak - Satu Baris -->
-            <div class="border-t border-b border-gray-300 py-2 mb-6">
-              <p id="out-kontak" class="text-xs text-gray-600 text-center">
+            <div class="border-t border-b border-gray-300 mb-6 py-3">
+              <div id="out-kontak" class="text-sm text-gray-600 text-center">
                 +123-456-7890 | hello@email.com | @username | 123 Anywhere St.,
                 Any City
-              </p>
+              </div>
             </div>
 
             <!-- Profil -->
@@ -320,7 +320,7 @@
               <h2 class="section-title">Profil</h2>
               <p
                 id="out-profil"
-                class="text-xs text-gray-700 text-justify leading-relaxed"
+                class="text-sm text-gray-700 text-justify leading-relaxed"
               >
                 [Deskripsi profil akan muncul di sini]
               </p>
@@ -331,7 +331,7 @@
               <h2 class="section-title">Kemampuan Utama</h2>
               <div
                 id="out-kemampuan"
-                class="grid grid-cols-2 gap-x-8 gap-y-1 text-xs"
+                class="grid grid-cols-2 gap-x-8 gap-y-1 text-sm"
               >
                 <div class="flex items-start">
                   <span class="mr-2">•</span><span>Digital Advertising</span>
@@ -348,13 +348,13 @@
               <div id="out-pengalaman" class="space-y-4">
                 <div class="exp-item">
                   <div class="flex justify-between items-start">
-                    <p class="font-bold text-xs">
+                    <p class="font-bold text-sm">
                       Digital Marketing Specialist di Company Name
                     </p>
-                    <p class="text-xs text-gray-600">2021 - 2023</p>
+                    <p class="text-sm text-gray-600">2021 - 2023</p>
                   </div>
                   <ul
-                    class="text-xs list-disc list-outside ml-4 mt-1 text-justify"
+                    class="text-sm list-disc list-outside ml-4 mt-1 text-justify"
                   >
                     <li>Deskripsi pekerjaan</li>
                   </ul>
@@ -369,11 +369,11 @@
                 <div class="flex justify-between items-start">
                   <div class="flex items-start">
                     <span class="mr-2">•</span
-                    ><span class="text-xs"
+                    ><span class="text-sm"
                       >S1 Ilmu Komunikasi Universitas ABC</span
                     >
                   </div>
-                  <p class="text-xs text-gray-600">2016 - 2020</p>
+                  <p class="text-sm text-gray-600">2016 - 2020</p>
                 </div>
               </div>
             </div>
@@ -382,11 +382,11 @@
             <div id="portfolio-section" class="hidden">
               <h2 class="section-title">Portfolio</h2>
               <div class="flex items-start">
-                <span class="mr-2 text-xs">•</span>
+                <span class="mr-2 text-sm">•</span>
                 <a
                   id="out-portfolio"
                   href="#"
-                  class="text-xs text-blue-600 underline"
+                  class="text-sm text-blue-600 underline"
                   >www.yourwebsite.com</a
                 >
               </div>
@@ -483,9 +483,9 @@
         // Update preview
         function updatePreview() {
           const nama =
-            document.getElementById("nama").value || "Pedro Fernandes";
+            document.getElementById("nama").value || "Nama";
           const posisi =
-            document.getElementById("posisi").value || "Digital Marketer";
+            document.getElementById("posisi").value || "Posisi/Jabatan";
           const telepon =
             document.getElementById("telepon").value || "+123-456-7890";
           const email =
@@ -543,15 +543,15 @@
 
             expHTML += `<div class="exp-item mb-3">
                          <div class="flex justify-between items-start">
-                             <p class="font-bold text-xs">${title} di ${company}</p>
-                             <p class="text-xs text-gray-600 flex-shrink-0 ml-4">${period}</p>
+                             <p class="font-bold text-sm">${title} di ${company}</p>
+                             <p class="text-sm text-gray-600 flex-shrink-0 ml-4">${period}</p>
                          </div>
-                         ${descList.length > 0 ? `<ul class="text-xs list-disc list-outside ml-4 mt-1 text-justify">${descList.map((d) => `<li>${d.trim()}</li>`).join("")}</ul>` : ""}
+                         ${descList.length > 0 ? `<div class="mt-1 space-y-0.5">${descList.map((d) => `<div class="flex items-start text-sm text-justify"><span class="mr-2">•</span><span>${d.trim()}</span></div>`).join("")}</div>` : ""}
                      </div>`;
           });
           outPengalaman.innerHTML =
             expHTML ||
-            '<div class="exp-item"><p class="text-xs">[Pengalaman kerja]</p></div>';
+            '<div class="exp-item"><p class="text-sm">[Pengalaman kerja]</p></div>';
 
           // Pendidikan
           const eduItems = document.querySelectorAll(".pendidikan-item");
@@ -563,12 +563,12 @@
               item.querySelector(".edu-period").value || "[Periode]";
 
             eduHTML += `<div class="flex justify-between items-start">
-                         <div class="flex items-start"><span class="mr-2">•</span><span class="text-xs">${title}</span></div>
-                         <p class="text-xs text-gray-600 flex-shrink-0 ml-4">${period}</p>
+                         <div class="flex items-start text-sm"><span class="mr-2">•</span><span>${title}</span></div>
+                         <p class="text-sm text-gray-600 flex-shrink-0 ml-4">${period}</p>
                      </div>`;
           });
           outPendidikan.innerHTML =
-            eduHTML || '<div class="text-xs">[Pendidikan]</div>';
+            eduHTML || '<div class="text-sm">[Pendidikan]</div>';
 
           // Portfolio
           const portfolio =
@@ -618,6 +618,13 @@
               ul.style.cssText =
                 "list-style-type: disc; list-style-position: outside; padding-left: 1rem;";
             });
+
+            // Fix kontak center alignment
+            const kontakP = clone.querySelector("#out-kontak");
+            if (kontakP) {
+              kontakP.parentElement.style.cssText = "border-top: 2px solid #d1d5db; border-bottom: 2px solid #d1d5db; padding-top: 1px; padding-bottom: 12px; margin-bottom: 24px;";
+              kontakP.style.cssText = "text-align: center; color: #4b5563; font-size: 14px; margin: 0; padding: 0;";
+            }
 
             wrapper.appendChild(clone);
             document.body.appendChild(wrapper);
