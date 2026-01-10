@@ -651,6 +651,16 @@
               kontakP.style.cssText = "text-align: center; color: #4b5563; font-size: 14px; margin: 0; padding: 0;";
             }
 
+            // Fix section title styling for consistent padding
+            clone.querySelectorAll(".section-title").forEach((title) => {
+              title.style.cssText = "font-weight: 700; font-size: 16px; border-bottom: 1px solid #1f2937; padding-bottom: 8px; margin-bottom: 12px; display: block;";
+            });
+
+            // Fix section container spacing
+            clone.querySelectorAll(".mb-5").forEach((section) => {
+              section.style.marginBottom = "20px";
+            });
+
             wrapper.appendChild(clone);
             document.body.appendChild(wrapper);
 
